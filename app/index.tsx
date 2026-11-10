@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
+import { colours, space, type } from "../constants/theme";
 
 // Temporary start screen so the project runs in Expo Go.
+// It uses the design tokens from constants/theme.ts.
 // Replaced by the Welcome screen in subtask 13.
 export default function IndexScreen() {
   return (
@@ -18,17 +20,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FFFFFF",
-    padding: 24,
+    backgroundColor: colours.bg,
+    padding: space.xxl,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#0A0A0A",
+    ...type.largeTitle,
+    color: colours.text,
   },
   subtitle: {
-    marginTop: 8,
-    fontSize: 15,
-    color: "#6B6B6B",
+    ...type.body,
+    marginTop: space.sm,
+    color: colours.muted,
   },
 });
