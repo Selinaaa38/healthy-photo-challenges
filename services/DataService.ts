@@ -75,10 +75,21 @@ export default {
     return data;
   },
 
-  async reset(): Promise<AppData> {
+  // True once onboarding is finished, because something has been saved.
+  async isSetUp(): Promise<boolean> {
+    return (await AsyncStorage.getItem(STORAGE_KEY)) !== null;
+  },
+
+  // Saves fresh starting data ("Explore first" and "Skip for now").
+  async start(): Promise<AppData> {
     const data = createInitialData();
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     return data;
+  },
+
+  // Reset demo data
+  async clear() {
+    await AsyncStorage.removeItem(STORAGE_KEY);
   },
 
   savePreferences(prefs: Preferences) {

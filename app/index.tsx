@@ -1,8 +1,16 @@
 import { Redirect } from "expo-router";
+import { useEffect, useState } from "react";
+import DataService from "../services/DataService";
 
-// App entry point. Like the Week 7 and 8 lectures, the index screen just
-// redirects. For now it always opens Welcome; in subtask 12 it will skip
-// straight to Today once preferences have been saved.
+// App entry point. Redirecting to Welcome the first time, or straight to Today once
+// onboarding is finished.
 export default function IndexScreen() {
-  return <Redirect href="/onboarding" />;
+  const [isSetUp, setIsSetUp] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    DataService.isSetUp().then(setIsSetUp);
+  }, []);
+
+  if (isSetUp === null) return null; // still checking storage
+  return <Redirect href={isSetUp ? "/today" : "/onboarding"} />;
 }
