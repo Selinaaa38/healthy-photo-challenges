@@ -208,7 +208,7 @@ export const createInitialData = (): AppData => ({
   specialAlerts: true,
   theme: "Garden",
   plants: 8,
-  tasks: [],
+  tasks: generalChallengeIds.map((id) => ({ challengeId: id, status: "active" })),
   checkIns: [],
   circles: [
     {
