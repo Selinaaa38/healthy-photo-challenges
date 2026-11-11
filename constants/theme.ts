@@ -18,6 +18,8 @@ export const colours = {
   errorTint: "#FDECEC",
   primary: "#0A0A0A",
   placeholder: "#E9E9EB",
+  overlay: "rgba(0, 0, 0, 0.45)", // darkens photos so white text is readable
+  onImageMuted: "rgba(255, 255, 255, 0.8)", // secondary text on photos
 };
 
 // Text styles from the font sizes and weights

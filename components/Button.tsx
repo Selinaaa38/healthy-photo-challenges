@@ -8,7 +8,15 @@ import { colours, radius, sizes, space, type } from "../constants/theme";
 //   secondary   - outlined pill ("Explore first", "Decline")
 //   text        - no background ("Skip for now", "Keep original", "Cancel")
 //   destructive - red pill ("Delete check-in")
-export type ButtonVariant = "primary" | "secondary" | "text" | "destructive";
+//   light       - white pill, for dark photos ("Set my preferences")
+//   outlineLight - white outline, for dark photos ("Explore first")
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "text"
+  | "destructive"
+  | "light"
+  | "outlineLight";
 
 type ButtonProps = {
   label: string;
@@ -58,6 +66,8 @@ const textColours: Record<ButtonVariant, string> = {
   secondary: colours.text,
   text: colours.text,
   destructive: colours.onPrimary,
+  light: colours.text,
+  outlineLight: colours.onPrimary,
 };
 
 const styles = StyleSheet.create({
@@ -96,5 +106,12 @@ const variantStyles = StyleSheet.create({
   },
   destructive: {
     backgroundColor: colours.error,
+  },
+  light: {
+    backgroundColor: colours.bg,
+  },
+  outlineLight: {
+    borderWidth: 1.5,
+    borderColor: colours.onPrimary,
   },
 });
