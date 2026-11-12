@@ -1,11 +1,23 @@
 import { router } from "expo-router";
-import { Button } from "../../../components/Button";
-import { PlaceholderScreen } from "../../../components/PlaceholderScreen";
+import { useEffect, useState } from "react";
+import { PreferencesForm } from "../../../components/PreferencesForm";
+import DataService from "../../../services/DataService";
+import { Preferences } from "../../../types";
 
+// Edit preferences from Profile, using the same form as onboarding (US02).
 export default function EditPreferencesScreen() {
-  return (
-    <PlaceholderScreen title="Edit preferences" figma="Figma 02 Preferences">
-      <Button label="Back" variant="text" onPress={() => router.back()} />
-    </PlaceholderScreen>
-  );
+  // undefined while loading; null if preferences were never set
+  const [prefs, setPrefs] = useState<Preferences | null>();
+
+  useEffect(() => {
+    DataService.getData().then((data) => setPrefs(data.preferences));
+  }, []);
+
+  const save = async (newPrefs: Preferences) => {
+    await DataService.savePreferences(newPrefs);
+    router.back();
+  };
+
+  if (prefs === undefined) return null;
+  return <PreferencesForm initial={prefs} saveLabel="Save changes" onSave={save} />;
 }
