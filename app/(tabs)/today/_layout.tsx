@@ -1,7 +1,13 @@
 import { Stack } from "expo-router";
 import { colours } from "../../../constants/theme";
 
-// The three "Not right now?" sheets open as modals
+// The "Something easier" and "Skip" sheets slide up from the bottom
+const sheetOptions = {
+  presentation: "formSheet",
+  sheetAllowedDetents: "fitToContents",
+  sheetGrabberVisible: true,
+} as const;
+
 export default function TodayLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -15,9 +21,10 @@ export default function TodayLayout() {
           headerShadowVisible: false,
         }}
       />
-      <Stack.Screen name="easier" options={{ presentation: "modal" }} />
+      <Stack.Screen name="easier" options={sheetOptions} />
+      {/* Full-height so the date and time wheels have room (B4) */}
       <Stack.Screen name="schedule" options={{ presentation: "modal" }} />
-      <Stack.Screen name="skip" options={{ presentation: "modal" }} />
+      <Stack.Screen name="skip" options={sheetOptions} />
     </Stack>
   );
 }
