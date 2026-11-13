@@ -1,7 +1,5 @@
 import { TextStyle } from "react-native";
 
-// Design tokens for Healthy Photo Challenges
-
 // Colours
 export const colours = {
   bg: "#FFFFFF",
@@ -20,6 +18,8 @@ export const colours = {
   placeholder: "#E9E9EB",
   overlay: "rgba(0, 0, 0, 0.45)", // darkens photos so white text is readable
   onImageMuted: "rgba(255, 255, 255, 0.8)", // secondary text on photos
+  overlayStrong: "rgba(0, 0, 0, 0.6)", // badges on photos
+  accentLight: "#FBBF24", // amber on dark photos ("Closes 8:00 pm")
 };
 
 // Text styles from the font sizes and weights

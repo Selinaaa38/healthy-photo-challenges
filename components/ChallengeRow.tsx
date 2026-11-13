@@ -15,6 +15,7 @@ type ChallengeRowProps = {
   minutes: number;
   goal: string;
   image?: ImageSourcePropType;
+  status?: string; // "Done" or "Skipped"
   onPress: () => void;
 };
 
@@ -23,13 +24,16 @@ export function ChallengeRow({
   minutes,
   goal,
   image,
+  status,
   onPress,
 }: ChallengeRowProps) {
+  const meta = `~${minutes} min · ${goal}${status ? ` · ${status}` : ""}`;
+
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`${title}, about ${minutes} minutes, ${goal}`}
+      accessibilityLabel={`${title}, ${meta.replace("~", "about ")}`}
       accessibilityHint="Opens the challenge details"
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}
     >
@@ -40,9 +44,7 @@ export function ChallengeRow({
       )}
       <View style={styles.text}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.meta}>
-          ~{minutes} min · {goal}
-        </Text>
+        <Text style={styles.meta}>{meta}</Text>
       </View>
       <Ionicons name="chevron-forward" size={18} color={colours.text} />
     </Pressable>
