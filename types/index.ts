@@ -41,6 +41,7 @@ export type CheckIn = {
   id: string;
   challengeId: string;
   photoUri: string;
+  selfieUri?: string; // optional selfie (B3)
   caption: string;
   audience: Audience;
   createdAt: string; // ISO date and time

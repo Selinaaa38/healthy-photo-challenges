@@ -25,22 +25,30 @@ export const suggestChallenges = (prefs: Preferences) => {
   return ids.length > 0 ? ids.slice(0, 3) : generalChallengeIds;
 };
 
-// An easier (same goal, shorter) or different (other activity) challenge
-// that is not already on today's list
+// An easier (no longer, same goal if possible) or different (other activity)
+// challenge that is not already on today's list (US08)
 export const getAlternative = (id: string, kind: "easier" | "different", data: AppData) => {
   const current = getChallenge(id);
-  const linkedId = kind === "easier" ? current.easierId : current.differentId;
-  if (linkedId) return getChallenge(linkedId);
   const taken = data.tasks.map((t) => t.challengeId);
-  return challenges.find(
+  // Use the linked challenge unless it's already on today's list
+  const linkedId = kind === "easier" ? current.easierId : current.differentId;
+  if (linkedId && !taken.includes(linkedId)) return getChallenge(linkedId);
+  const options = challenges.filter(
     (c) =>
+      c.id !== id &&
       !taken.includes(c.id) &&
       c.id !== dailySpecial.challengeId &&
-      !isExcluded(c.activity, data.preferences) &&
-      (kind === "easier"
-        ? c.goal === current.goal && c.minutes < current.minutes
-        : c.activity !== current.activity),
+      !isExcluded(c.activity, data.preferences),
   );
+  if (kind === "different") return options.find((c) => c.activity !== current.activity);
+  // Easier: no longer than now, same goal first, then the shortest
+  return options
+    .filter((c) => c.minutes <= current.minutes)
+    .sort(
+      (a, b) =>
+        Number(b.goal === current.goal) - Number(a.goal === current.goal) ||
+        a.minutes - b.minutes,
+    )[0];
 };
 
 // B1: returns an error message, or null if the name
@@ -100,12 +108,19 @@ export default {
   },
 
   // One plant per completed challenge (US07).
-  completeChallenge(challengeId: string, photoUri: string, caption: string, audience: Audience) {
+  completeChallenge(
+    challengeId: string,
+    photoUri: string,
+    selfieUri: string | undefined,
+    caption: string,
+    audience: Audience,
+  ) {
     return this.update((data) => {
       data.checkIns.unshift({
         id: Date.now().toString(),
         challengeId,
         photoUri,
+        selfieUri,
         caption,
         audience,
         createdAt: new Date().toISOString(),

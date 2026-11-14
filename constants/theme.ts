@@ -20,6 +20,7 @@ export const colours = {
   onImageMuted: "rgba(255, 255, 255, 0.8)", // secondary text on photos
   overlayStrong: "rgba(0, 0, 0, 0.6)", // badges on photos
   accentLight: "#FBBF24", // amber on dark photos ("Closes 8:00 pm")
+  darkSurface: "#262626", // buttons on the black camera screen
 };
 
 // Text styles from the font sizes and weights
