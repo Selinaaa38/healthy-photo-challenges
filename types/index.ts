@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 export type Goal = "Move" | "Rest" | "Nourish" | "Unwind" | "Hydrate";
 export type Minutes = 5 | 10 | 20;
 
@@ -9,6 +11,7 @@ export type Challenge = {
   activity?: string; // matches an "I enjoy" / "Never suggest" chip, e.g. "Walking"
   minutes: number;
   steps: string[];
+  image: ImageSourcePropType; // photo in assets/images
   easierId?: string; // shorter challenge with the same goal
   differentId?: string; // different activity
 };

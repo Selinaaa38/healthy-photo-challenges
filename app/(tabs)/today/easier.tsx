@@ -5,7 +5,6 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Button } from "../../../components/Button";
 import { Sheet } from "../../../components/Sheet";
 import { colours, radius, sizes, space, type } from "../../../constants/theme";
-import { goalImages } from "../../../data/seed";
 import DataService, { getAlternative } from "../../../services/DataService";
 import { AppData } from "../../../types";
 
@@ -63,7 +62,7 @@ export default function EasierSheet() {
       <View style={styles.preview} accessible>
         {alternative ? (
           <>
-            <Image source={goalImages[alternative.goal]} style={styles.thumbnail} />
+            <Image source={alternative.image} style={styles.thumbnail} />
             <View style={styles.previewText}>
               <Text style={styles.overline}>Preview</Text>
               <Text style={styles.previewTitle}>{alternative.title}</Text>

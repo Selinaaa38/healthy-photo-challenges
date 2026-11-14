@@ -1,5 +1,5 @@
 import { ImageSourcePropType } from "react-native";
-import { AppData, Challenge, Goal } from "../types";
+import { AppData, Challenge } from "../types";
 
 // Seed data: the challenge catalogue and the starting app data.
 // Simulated personal suggestions
@@ -8,6 +8,7 @@ export const challenges: Challenge[] = [
   // Move
   {
     id: "walk-campus",
+    image: require("../assets/images/walk-campus.jpg"),
     title: "Walk a loop around campus",
     goal: "Move",
     activity: "Walking",
@@ -22,6 +23,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "walk-cafe",
+    image: require("../assets/images/walk-cafe.jpg"),
     title: "5-minute walk to the nearest café",
     goal: "Move",
     activity: "Walking",
@@ -30,6 +32,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "walk-long",
+    image: require("../assets/images/walk-long.jpg"),
     title: "Take the long way home",
     goal: "Move",
     activity: "Walking",
@@ -39,6 +42,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "stretch-desk",
+    image: require("../assets/images/stretch-desk.jpg"),
     title: "Stretch at your desk",
     goal: "Move",
     minutes: 5,
@@ -46,6 +50,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "jog-block",
+    image: require("../assets/images/jog-block.jpg"),
     title: "Jog around the block",
     goal: "Move",
     activity: "Running",
@@ -55,6 +60,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "gym-circuit",
+    image: require("../assets/images/gym-circuit.jpg"),
     title: "Quick gym circuit",
     goal: "Move",
     activity: "Gym",
@@ -64,6 +70,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "yoga-flow",
+    image: require("../assets/images/yoga-flow.jpg"),
     title: "Five-minute yoga flow",
     goal: "Move",
     activity: "Yoga",
@@ -73,6 +80,7 @@ export const challenges: Challenge[] = [
   // Rest
   {
     id: "lights-out",
+    image: require("../assets/images/lights-out.jpg"),
     title: "Lights out before 10:30 pm",
     goal: "Rest",
     minutes: 5,
@@ -80,6 +88,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "breathe-five",
+    image: require("../assets/images/breathe-five.jpg"),
     title: "Breathe for five minutes",
     goal: "Rest",
     activity: "Meditating",
@@ -88,6 +97,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "sunset-meditation",
+    image: require("../assets/images/sunset-meditation.jpg"),
     title: "Sunset meditation",
     goal: "Rest",
     activity: "Meditating",
@@ -97,6 +107,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "read-bed",
+    image: require("../assets/images/read-bed.jpg"),
     title: "Read a chapter before bed",
     goal: "Rest",
     activity: "Reading",
@@ -107,6 +118,7 @@ export const challenges: Challenge[] = [
   // Nourish
   {
     id: "fruit-snack",
+    image: require("../assets/images/fruit-snack.jpg"),
     title: "Snack on some fruit",
     goal: "Nourish",
     minutes: 2,
@@ -114,6 +126,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "rainbow-plate",
+    image: require("../assets/images/rainbow-plate.jpg"),
     title: "Cook a rainbow plate",
     goal: "Nourish",
     activity: "Cooking",
@@ -124,6 +137,7 @@ export const challenges: Challenge[] = [
   // Unwind
   {
     id: "album",
+    image: require("../assets/images/album.jpg"),
     title: "Listen to a favourite album",
     goal: "Unwind",
     activity: "Music",
@@ -133,6 +147,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "read-outside",
+    image: require("../assets/images/read-outside.jpg"),
     title: "Read outside for ten minutes",
     goal: "Unwind",
     activity: "Reading",
@@ -141,6 +156,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "three-good",
+    image: require("../assets/images/three-good.jpg"),
     title: "Write three good things",
     goal: "Unwind",
     minutes: 5,
@@ -149,6 +165,7 @@ export const challenges: Challenge[] = [
   // Hydrate
   {
     id: "water-bottle",
+    image: require("../assets/images/water-bottle.jpg"),
     title: "Refill your water bottle",
     goal: "Hydrate",
     minutes: 2,
@@ -156,6 +173,7 @@ export const challenges: Challenge[] = [
   },
   {
     id: "herbal-tea",
+    image: require("../assets/images/herbal-tea.jpg"),
     title: "Make a cup of herbal tea",
     goal: "Hydrate",
     minutes: 5,
@@ -172,15 +190,8 @@ export const dailySpecial = {
   closesAt: "20:00",
 };
 
-// Placeholder photos. 
-export const goalImages: Record<Goal, ImageSourcePropType> = {
-  Move: require("../assets/images/move.jpg"),
-  Rest: require("../assets/images/rest.jpg"),
-  Nourish: require("../assets/images/nourish.jpg"),
-  Unwind: require("../assets/images/sunset.jpg"),
-  Hydrate: require("../assets/images/hydrate.jpg"),
-};
-export const specialImage: ImageSourcePropType = require("../assets/images/sunset.jpg");
+// Photo for each post from another member. Kept out of AppData so the
+// saved data stays plain JSON.
 export const postImages: Record<string, ImageSourcePropType> = {
   "post-vanessa": require("../assets/images/meal.jpg"),
 };

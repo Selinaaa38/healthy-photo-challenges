@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button } from "../../../components/Button";
 import { colours, radius, sizes, space, type } from "../../../constants/theme";
-import { dailySpecial, goalImages, specialImage } from "../../../data/seed";
+import { dailySpecial } from "../../../data/seed";
 import DataService, { getChallenge } from "../../../services/DataService";
 import { AppData } from "../../../types";
 
@@ -55,7 +55,7 @@ export default function ChallengeDetailScreen() {
       contentInsetAdjustmentBehavior="automatic"
     >
       <Image
-        source={isSpecial ? specialImage : goalImages[challenge.goal]}
+        source={challenge.image}
         style={styles.photo}
         accessible={false}
       />

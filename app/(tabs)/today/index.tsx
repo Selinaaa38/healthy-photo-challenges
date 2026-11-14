@@ -5,7 +5,7 @@ import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, View } from "
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChallengeRow } from "../../../components/ChallengeRow";
 import { colours, radius, sizes, space, type } from "../../../constants/theme";
-import { dailySpecial, goalImages, plantsPerWorld, specialImage } from "../../../data/seed";
+import { dailySpecial, plantsPerWorld } from "../../../data/seed";
 import DataService, { getChallenge } from "../../../services/DataService";
 import { AppData } from "../../../types";
 import { formatTime, formatWhen } from "../../../utils/time";
@@ -97,7 +97,7 @@ export default function TodayScreen() {
           }`}
           accessibilityHint="Opens the challenge details"
         >
-          <ImageBackground source={specialImage} style={styles.special}>
+          <ImageBackground source={special.image} style={styles.special}>
             <View style={[StyleSheet.absoluteFill, styles.overlay]} />
             <View style={styles.badges}>
               <View style={styles.badge}>
@@ -136,7 +136,7 @@ export default function TodayScreen() {
                 title={challenge.title}
                 minutes={challenge.minutes}
                 goal={challenge.goal}
-                image={goalImages[challenge.goal]}
+                image={challenge.image}
                 status={
                   task.status === "completed" ? "Done" : task.status === "skipped" ? "Skipped" : undefined
                 }
