@@ -249,7 +249,7 @@ export const createInitialData = (): AppData => ({
       circleId: "family",
       author: "Vanessa",
       challengeId: "rainbow-plate",
-      caption: "Rainbow plate attempt #2",
+      caption: "Rainbow bowl attempt #2",
       createdAt: hoursAgo(2),
       reactions: {
         cheer: ["Taylor", "Mum"],

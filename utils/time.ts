@@ -15,3 +15,12 @@ export const formatWhen = (iso: string) => {
         : date.toLocaleDateString("en-AU", { weekday: "long" });
   return `${day} ${formatTime(date)}`;
 };
+
+// "Just now", "5m ago", "2h ago" or "3d ago" for posts and comments.
+export const timeAgo = (iso: string) => {
+  const minutes = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 24 * 60) return `${Math.floor(minutes / 60)}h ago`;
+  return `${Math.floor(minutes / (24 * 60))}d ago`;
+};

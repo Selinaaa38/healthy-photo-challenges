@@ -88,7 +88,7 @@ export function PostCard({
         {photo && (
           <Image
             source={photo}
-            style={StyleSheet.absoluteFill}
+            style={styles.photoImage}
             accessible={true}
             accessibilityLabel={`${author}'s check-in photo${caption ? `: ${caption}` : ""}`}
           />
@@ -198,6 +198,10 @@ const styles = StyleSheet.create({
     height: 360,
     backgroundColor: colours.placeholder,
     overflow: "hidden",
+  },
+  photoImage: {
+    width: "100%",
+    height: "100%",
   },
   selfie: {
     position: "absolute",
