@@ -236,7 +236,12 @@ export const createInitialData = (): AppData => ({
     },
   ],
   invitations: [
-    { id: "uni-club", circleName: "Uni Club", inviter: "Dan", memberCount: 4 },
+    {
+      id: "uni-club",
+      circleName: "Uni Club",
+      inviter: "Dan",
+      members: ["Dan", "Mia", "Leo", "Ana"],
+    },
   ],
   posts: [
     {

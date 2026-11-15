@@ -4,14 +4,8 @@ import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button } from "../../components/Button";
 import { colours, radius, sizes, space, type } from "../../constants/theme";
-import DataService, { getChallenge } from "../../services/DataService";
+import DataService, { describeMembers, getChallenge } from "../../services/DataService";
 import { Audience, Circle } from "../../types";
-
-// Labelling conventions for circles
-const describe = (circle: Circle) =>
-  circle.members.length <= 4
-    ? `${circle.members.slice(0, -1).join(", ")} and ${circle.members.at(-1)}`
-    : `${circle.members.length} people`;
 
 // Choose who sees the check-in. Private is the default, and the
 // button names the choice (US05). Completing adds one plant (US07).
@@ -31,7 +25,7 @@ export default function AudienceScreen() {
 
   const options = [
     { id: "private", name: "Private", detail: "Only you can see this", icon: "lock-closed-outline" as const },
-    ...circles.map((c) => ({ id: c.id, name: c.name, detail: describe(c), icon: "people-outline" as const })),
+    ...circles.map((c) => ({ id: c.id, name: c.name, detail: describeMembers(c), icon: "people-outline" as const })),
   ];
   const chosen = options.find((o) => o.id === audience)!;
 

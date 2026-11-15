@@ -62,6 +62,14 @@ export const circleNameError = (name: string, circles: Circle[]) => {
   return null;
 };
 
+// "You, Taylor, Vanessa and Mum" for small circles, "5 people" for bigger ones.
+export const describeMembers = (circle: Circle) =>
+  circle.members.length === 1
+    ? "Just you so far"
+    : circle.members.length <= 4
+      ? `${circle.members.slice(0, -1).join(", ")} and ${circle.members.at(-1)}`
+      : `${circle.members.length} people`;
+
 // Replaces the task for a challenge, or adds it if it isn't on the list.
 const setTask = (data: AppData, oldId: string, task: Task) => {
   const index = data.tasks.findIndex((t) => t.challengeId === oldId);
@@ -182,7 +190,7 @@ export default {
         data.circles.push({
           id: invitation.id,
           name: invitation.circleName,
-          members: ["You", invitation.inviter],
+          members: ["You", ...invitation.members],
           pending: [],
         });
       }

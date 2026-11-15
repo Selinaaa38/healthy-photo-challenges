@@ -79,7 +79,7 @@ export type Invitation = {
   id: string;
   circleName: string;
   inviter: string;
-  memberCount: number;
+  members: string[]; // current members, inviter first
 };
 
 export type Theme = "Garden" | "Pets" | "Sanctuary";
