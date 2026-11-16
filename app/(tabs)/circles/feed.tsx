@@ -1,7 +1,7 @@
 import { Ionicons } from "@react-native-vector-icons/ionicons";
-import { Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { PostCard, Reaction } from "../../../components/PostCard";
 import { colours, radius, sizes, space, type } from "../../../constants/theme";
 import { postImages } from "../../../data/seed";
@@ -41,6 +41,35 @@ export default function CircleFeedScreen() {
     setDrafts({ ...drafts, [postId]: "" });
   };
 
+  const deleteComment = (postId: string, commentId: string) => {
+    Alert.alert("Delete your comment?", undefined, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => setData(await DataService.deleteComment(postId, commentId)),
+      },
+    ]);
+  };
+
+  const confirmLeave = () => {
+    Alert.alert(
+      `Leave ${circle.name}?`,
+      "You'll stop seeing its posts. Your private check-ins aren't affected.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Leave",
+          style: "destructive",
+          onPress: async () => {
+            await DataService.leaveCircle(circle.id);
+            router.back();
+          },
+        },
+      ],
+    );
+  };
+
   const reactionsFor = (post: Post): Reaction[] =>
     reactionTypes.map((r) => ({
       ...r,
@@ -58,7 +87,22 @@ export default function CircleFeedScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: circle.name }} />
+      <Stack.Screen
+        options={{
+          title: circle.name,
+          // Leave this circle, after a confirmation (US13)
+          headerRight: () => (
+            <Pressable
+              onPress={confirmLeave}
+              accessibilityRole="button"
+              accessibilityLabel={`Leave ${circle.name}`}
+              hitSlop={12}
+            >
+              <Ionicons name="exit-outline" size={24} color={colours.error} />
+            </Pressable>
+          ),
+        }}
+      />
       <ScrollView
         style={styles.screen}
         contentContainerStyle={styles.content}
@@ -115,17 +159,31 @@ export default function CircleFeedScreen() {
               />
               <View style={styles.comments}>
                 {post.comments.map((comment) => (
-                  <Text key={comment.id} style={styles.comment}>
-                    <Text style={styles.commentAuthor}>{comment.author} </Text>
-                    {comment.text}
-                    <Text style={styles.commentTime}> {timeAgo(comment.createdAt)}</Text>
-                  </Text>
+                  <View key={comment.id} style={styles.commentLine}>
+                    <Text style={styles.comment}>
+                      <Text style={styles.commentAuthor}>{comment.author} </Text>
+                      {comment.text}
+                      <Text style={styles.commentTime}> {timeAgo(comment.createdAt)}</Text>
+                    </Text>
+                    {/* You can delete your own comments */}
+                    {comment.author === "You" && (
+                      <Pressable
+                        onPress={() => deleteComment(post.id, comment.id)}
+                        accessibilityRole="button"
+                        accessibilityLabel="Delete your comment"
+                        hitSlop={12}
+                      >
+                        <Ionicons name="trash-outline" size={16} color={colours.muted} />
+                      </Pressable>
+                    )}
+                  </View>
                 ))}
                 <View style={styles.commentRow}>
                   <TextInput
                     value={draft}
                     onChangeText={(text) => setDrafts({ ...drafts, [post.id]: text })}
                     placeholder="Say something kind..."
+                    maxLength={300}
                     placeholderTextColor={colours.muted}
                     accessibilityLabel={`Comment on ${post.author}'s post`}
                     style={styles.input}
@@ -186,6 +244,12 @@ const styles = StyleSheet.create({
   comment: {
     ...type.callout,
     color: colours.text,
+    flex: 1,
+  },
+  commentLine: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: space.sm,
   },
   commentAuthor: {
     ...type.calloutStrong,

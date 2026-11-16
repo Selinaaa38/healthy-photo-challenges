@@ -174,6 +174,20 @@ export default {
     });
   },
 
+  deleteComment(postId: string, commentId: string) {
+    return this.update((data) => {
+      const post = data.posts.find((p) => p.id === postId)!;
+      post.comments = post.comments.filter((c) => c.id !== commentId);
+    });
+  },
+
+  // Leaving removes the circle, so you no longer see its posts (US13).
+  leaveCircle(circleId: string) {
+    return this.update((data) => {
+      data.circles = data.circles.filter((c) => c.id !== circleId);
+    });
+  },
+
   // Invited people stay pending and can't see posts until they accept (US12).
   createCircle(name: string, invited: string[]) {
     return this.update((data) => {
