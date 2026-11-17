@@ -174,6 +174,20 @@ export default {
     });
   },
 
+  // Figma 17: change who can see a check-in after posting.
+  changeAudience(checkInId: string, audience: Audience) {
+    return this.update((data) => {
+      data.checkIns.find((c) => c.id === checkInId)!.audience = audience;
+    });
+  },
+
+  // Figma 18: deleting removes the photo but keeps the plant and progress.
+  deleteCheckIn(checkInId: string) {
+    return this.update((data) => {
+      data.checkIns = data.checkIns.filter((c) => c.id !== checkInId);
+    });
+  },
+
   deleteComment(postId: string, commentId: string) {
     return this.update((data) => {
       const post = data.posts.find((p) => p.id === postId)!;
