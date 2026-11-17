@@ -18,8 +18,6 @@ export const challenges: Challenge[] = [
       "Walk at an easy pace",
       "Snap a photo of a spot you liked",
     ],
-    easierId: "walk-cafe",
-    differentId: "stretch-desk",
   },
   {
     id: "walk-cafe",
@@ -38,7 +36,6 @@ export const challenges: Challenge[] = [
     activity: "Walking",
     minutes: 20,
     steps: ["Choose a longer route home", "Keep a steady pace", "Snap something new on the way"],
-    easierId: "walk-campus",
   },
   {
     id: "stretch-desk",
@@ -56,7 +53,6 @@ export const challenges: Challenge[] = [
     activity: "Running",
     minutes: 10,
     steps: ["Warm up with a short walk", "Jog one loop at an easy pace", "Snap the finish line"],
-    easierId: "walk-cafe",
   },
   {
     id: "gym-circuit",
@@ -66,7 +62,6 @@ export const challenges: Challenge[] = [
     activity: "Gym",
     minutes: 20,
     steps: ["Pick three exercises", "Do three rounds", "Snap your favourite machine"],
-    easierId: "stretch-desk",
   },
   {
     id: "yoga-flow",
@@ -103,7 +98,6 @@ export const challenges: Challenge[] = [
     activity: "Meditating",
     minutes: 7,
     steps: ["Find a spot with a view of the sky", "Sit and breathe slowly as the light changes", "Snap the sunset"],
-    easierId: "breathe-five",
   },
   {
     id: "read-bed",
@@ -113,7 +107,6 @@ export const challenges: Challenge[] = [
     activity: "Reading",
     minutes: 20,
     steps: ["Choose a paper book", "Read one chapter", "Snap the page you stopped on"],
-    easierId: "lights-out",
   },
   // Nourish
   {
@@ -132,7 +125,6 @@ export const challenges: Challenge[] = [
     activity: "Cooking",
     minutes: 20,
     steps: ["Pick three colourful vegetables", "Cook a simple meal with them", "Snap your plate"],
-    easierId: "fruit-snack",
   },
   // Unwind
   {
@@ -143,7 +135,6 @@ export const challenges: Challenge[] = [
     activity: "Music",
     minutes: 20,
     steps: ["Pick an album you love", "Listen without scrolling", "Snap the cover"],
-    easierId: "three-good",
   },
   {
     id: "read-outside",
@@ -179,7 +170,32 @@ export const challenges: Challenge[] = [
     minutes: 5,
     steps: ["Boil the kettle", "Brew a herbal tea", "Snap your mug"],
   },
+  // Swap options: always offered by "Not right now?" (US08)
+  {
+    id: "push-ups",
+    image: require("../assets/images/push-ups.jpg"),
+    title: "Do a few push-ups",
+    goal: "Move",
+    minutes: 5,
+    steps: ["Find a clear spot on the floor", "Do 5 to 10 push-ups, knees down is fine", "Snap your spot"],
+  },
+  {
+    id: "kind-note",
+    image: require("../assets/images/kind-note.jpg"),
+    title: "Leave a kind note",
+    goal: "Unwind",
+    minutes: 5,
+    steps: [
+      "Grab a sticky note or open your messages",
+      "Write something kind for yourself or someone else",
+      "Snap your note",
+    ],
+  },
 ];
+
+// Always shown by "Something easier" and "Different activity", so the
+// swap works the same way every time (US08).
+export const swapChallengeIds = { easier: "push-ups", different: "kind-note" } as const;
 
 // Shown after "Explore first", before any preferences are set
 export const generalChallengeIds = ["walk-campus", "fruit-snack", "lights-out"];

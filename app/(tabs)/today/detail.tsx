@@ -31,7 +31,9 @@ export default function ChallengeDetailScreen() {
 
   const challenge = getChallenge(id);
   const isSpecial = id === dailySpecial.challengeId;
-  const isDone = data.tasks.some((t) => t.challengeId === id && t.status === "completed");
+  const status = data.tasks.find((t) => t.challengeId === id)?.status;
+  const isDone = status === "completed";
+  const isSkipped = status === "skipped";
   const prefs = data.preferences;
 
   // Explains the suggestion using the user's own preferences.
@@ -88,14 +90,31 @@ export default function ChallengeDetailScreen() {
         </View>
       </View>
 
-      <Button
-        label={isDone ? "Completed today" : "Start challenge"}
-        icon={isDone ? "checkmark-circle" : undefined}
-        disabled={isDone}
-        onPress={() => router.push({ pathname: "/checkin", params: { id } })}
-      />
+      {/* Hidden once skipped; "Undo skip" below brings it back */}
+      {!isSkipped && (
+        <Button
+          label={isDone ? "Completed today" : "Start challenge"}
+          icon={isDone ? "checkmark-circle" : undefined}
+          disabled={isDone}
+          onPress={() => router.push({ pathname: "/checkin", params: { id } })}
+        />
+      )}
 
-      {!isDone && (
+      {/* Skipped: say so and offer an undo instead of the options again */}
+      {isSkipped && (
+        <View style={styles.skippedRow}>
+          <Text style={styles.notNow}>
+            You skipped this today. Your plants are kept. Undo to start it after all.
+          </Text>
+          <Button
+            label="Undo skip"
+            variant="text"
+            onPress={async () => setData(await DataService.undoSkip(id))}
+          />
+        </View>
+      )}
+
+      {!isDone && !isSkipped && (
         <>
           <Text style={styles.notNow}>Not right now?</Text>
           <View style={styles.options}>
@@ -206,6 +225,9 @@ const styles = StyleSheet.create({
   whyBody: {
     ...type.callout,
     color: colours.muted,
+  },
+  skippedRow: {
+    alignItems: "center",
   },
   notNow: {
     ...type.footnote,

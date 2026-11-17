@@ -1,5 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { challenges, createInitialData, dailySpecial, generalChallengeIds } from "../data/seed";
+import {
+  challenges,
+  createInitialData,
+  dailySpecial,
+  generalChallengeIds,
+  swapChallengeIds,
+} from "../data/seed";
 import { AppData, Audience, Circle, Preferences, Task } from "../types";
 
 // Saves all app data under one key
@@ -16,6 +22,8 @@ export const suggestChallenges = (prefs: Preferences) => {
   const fits = challenges.filter(
     (c) =>
       c.id !== dailySpecial.challengeId &&
+      c.id !== swapChallengeIds.easier && // kept for "Not right now?"
+      c.id !== swapChallengeIds.different &&
       (prefs.goals.length === 0 || prefs.goals.includes(c.goal)) &&
       c.minutes <= prefs.minutes &&
       !isExcluded(c.activity, prefs),
@@ -25,30 +33,12 @@ export const suggestChallenges = (prefs: Preferences) => {
   return ids.length > 0 ? ids.slice(0, 3) : generalChallengeIds;
 };
 
-// An easier (no longer, same goal if possible) or different (other activity)
-// challenge that is not already on today's list (US08)
-export const getAlternative = (id: string, kind: "easier" | "different", data: AppData) => {
-  const current = getChallenge(id);
-  const taken = data.tasks.map((t) => t.challengeId);
-  // Use the linked challenge unless it's already on today's list
-  const linkedId = kind === "easier" ? current.easierId : current.differentId;
-  if (linkedId && !taken.includes(linkedId)) return getChallenge(linkedId);
-  const options = challenges.filter(
-    (c) =>
-      c.id !== id &&
-      !taken.includes(c.id) &&
-      c.id !== dailySpecial.challengeId &&
-      !isExcluded(c.activity, data.preferences),
-  );
-  if (kind === "different") return options.find((c) => c.activity !== current.activity);
-  // Easier: no longer than now, same goal first, then the shortest
-  return options
-    .filter((c) => c.minutes <= current.minutes)
-    .sort(
-      (a, b) =>
-        Number(b.goal === current.goal) - Number(a.goal === current.goal) ||
-        a.minutes - b.minutes,
-    )[0];
+// "Something easier" always offers push-ups and "Different activity" always
+// offers a kind note. Opened from one of those, it offers the other (US08).
+export const getAlternative = (id: string, kind: "easier" | "different") => {
+  const offered = swapChallengeIds[kind];
+  const other = swapChallengeIds[kind === "easier" ? "different" : "easier"];
+  return getChallenge(id === offered ? other : offered);
 };
 
 // B1: returns an error message, or null if the name
@@ -153,6 +143,11 @@ export default {
     return this.update((data) =>
       setTask(data, challengeId, { challengeId, status: "skipped", skipReason, skipNote }),
     );
+  },
+
+  // Undo a skip: the challenge is back on today's list.
+  undoSkip(challengeId: string) {
+    return this.update((data) => setTask(data, challengeId, { challengeId, status: "active" }));
   },
 
   // Tapping a reaction again removes it (B5).

@@ -25,10 +25,12 @@ export default function EasierSheet() {
   }, []);
 
   if (!data) return null;
-  const alternative = getAlternative(id, kind, data);
+  const alternative = getAlternative(id, kind);
+  // Swapping to a challenge already on today's list would add it twice
+  const alreadyOnList = data.tasks.some((t) => t.challengeId === alternative.id);
 
   const useAlternative = async () => {
-    await DataService.swapChallenge(id, alternative!.id);
+    await DataService.swapChallenge(id, alternative.id);
     router.dismissTo("/today");
   };
 
@@ -60,23 +62,19 @@ export default function EasierSheet() {
       </View>
 
       <View style={styles.preview} accessible>
-        {alternative ? (
-          <>
-            <Image source={alternative.image} style={styles.thumbnail} />
-            <View style={styles.previewText}>
-              <Text style={styles.overline}>Preview</Text>
-              <Text style={styles.previewTitle}>{alternative.title}</Text>
-              <Text style={styles.previewMeta}>
-                ~{alternative.minutes} min · {alternative.goal}
-              </Text>
-            </View>
-          </>
-        ) : (
-          <Text style={styles.previewMeta}>No other option right now. Try the other tab.</Text>
-        )}
+        <Image source={alternative.image} style={styles.thumbnail} />
+        <View style={styles.previewText}>
+          <Text style={styles.overline}>Preview</Text>
+          <Text style={styles.previewTitle}>{alternative.title}</Text>
+          <Text style={styles.previewMeta}>
+            {alreadyOnList
+              ? "Already on today's list"
+              : `~${alternative.minutes} min · ${alternative.goal}`}
+          </Text>
+        </View>
       </View>
 
-      <Button label="Use this instead" disabled={!alternative} onPress={useAlternative} />
+      <Button label="Use this instead" disabled={alreadyOnList} onPress={useAlternative} />
       <Button label="Keep original" variant="text" onPress={() => router.back()} />
     </Sheet>
   );

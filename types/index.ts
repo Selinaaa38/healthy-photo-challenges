@@ -12,8 +12,6 @@ export type Challenge = {
   minutes: number;
   steps: string[];
   image: ImageSourcePropType; // photo in assets/images
-  easierId?: string; // shorter challenge with the same goal
-  differentId?: string; // different activity
 };
 
 export type Preferences = {
