@@ -27,9 +27,10 @@ export default function TodayScreen() {
     router.navigate({ pathname: "/today/detail", params: { id } });
 
   const special = getChallenge(dailySpecial.challengeId);
-  const specialDone = data.tasks.some(
-    (t) => t.challengeId === special.id && t.status === "completed",
-  );
+  // "completed", "skipped" or undefined (not done yet)
+  const specialStatus = data.tasks.find((t) => t.challengeId === special.id)?.status;
+  const specialDone = specialStatus === "completed";
+  const specialSkipped = specialStatus === "skipped";
   const [hours, mins] = dailySpecial.closesAt.split(":").map(Number);
   const closesAt = formatTime(new Date(new Date().setHours(hours, mins)));
 
@@ -61,43 +62,62 @@ export default function TodayScreen() {
         </View>
 
         {family && (
-          <Pressable
-            onPress={() => router.navigate({ pathname: "/circles/feed", params: { id: family.id } })}
-            accessibilityRole="button"
-            accessibilityLabel={`Family today. Checked in: ${
-              family.members.filter(posted).join(", ") || "nobody yet"
-            }`}
-            accessibilityHint="Opens the Family feed"
-          >
+          <View>
             <Text style={styles.sectionLabel}>Family today</Text>
             <View style={styles.family}>
-              {family.members.map((name) => (
-                <View key={name} style={styles.member}>
-                  <View
-                    style={[
-                      styles.avatar,
-                      name === "You" && styles.avatarYou,
-                      posted(name) && styles.avatarPosted,
-                    ]}
+              {family.members.map((name) => {
+                const isYou = name === "You";
+                const hasPosted = posted(name);
+                // Your turn opens the camera; anyone who has posted opens their story
+                const open = () =>
+                  isYou && !hasPosted
+                    ? router.push("/checkin")
+                    : router.push({ pathname: "/story", params: { author: name, circle: family.id } });
+                return (
+                  <Pressable
+                    key={name}
+                    onPress={open}
+                    disabled={!isYou && !hasPosted}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      isYou
+                        ? hasPosted
+                          ? "You have checked in today"
+                          : "Your turn: check in with a photo"
+                        : `${name}, ${hasPosted ? "checked in today" : "hasn't checked in yet"}`
+                    }
+                    style={({ pressed }) => [styles.member, pressed && styles.pressed]}
                   >
-                    <Text style={styles.initial}>{name[0]}</Text>
-                  </View>
-                  <Text style={styles.memberName}>{name === "You" ? "Your turn" : name}</Text>
-                </View>
-              ))}
+                    <View
+                      style={[
+                        styles.avatar,
+                        isYou && styles.avatarYou,
+                        hasPosted && styles.avatarPosted,
+                      ]}
+                    >
+                      <Text style={styles.initial}>{name[0]}</Text>
+                    </View>
+                    <Text style={styles.memberName}>{isYou ? (hasPosted ? "You" : "Your turn") : name}</Text>
+                  </Pressable>
+                );
+              })}
             </View>
-          </Pressable>
+          </View>
         )}
 
         <Pressable
           onPress={() => openChallenge(special.id)}
           accessibilityRole="button"
           accessibilityLabel={`Daily Special, optional: ${special.title}, about ${special.minutes} minutes, ${
-            specialDone ? "done" : `closes ${closesAt}`
+            specialDone ? "done" : specialSkipped ? "skipped" : `closes ${closesAt}`
           }`}
           accessibilityHint="Opens the challenge details"
         >
-          <ImageBackground source={special.image} style={styles.special}>
+          <ImageBackground
+            source={special.image}
+            // Greyed out once skipped; it can still be opened and done
+            style={[styles.special, specialSkipped && styles.skipped]}
+          >
             <View style={[StyleSheet.absoluteFill, styles.overlay]} />
             <View style={styles.badges}>
               <View style={styles.badge}>
@@ -106,12 +126,12 @@ export default function TodayScreen() {
               </View>
               <View style={styles.badge}>
                 <Ionicons
-                  name={specialDone ? "checkmark-circle" : "time-outline"}
+                  name={specialDone ? "checkmark-circle" : specialSkipped ? "close-circle" : "time-outline"}
                   size={14}
                   color={colours.accentLight}
                 />
                 <Text style={[styles.badgeText, styles.badgeAccent]}>
-                  {specialDone ? "Done" : `Closes ${closesAt}`}
+                  {specialDone ? "Done" : specialSkipped ? "Skipped" : `Closes ${closesAt}`}
                 </Text>
               </View>
             </View>
@@ -244,6 +264,9 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl,
     overflow: "hidden",
     backgroundColor: colours.primary,
+  },
+  skipped: {
+    opacity: 0.45,
   },
   overlay: {
     backgroundColor: colours.overlay,

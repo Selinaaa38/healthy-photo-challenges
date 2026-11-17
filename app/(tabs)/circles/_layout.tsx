@@ -8,6 +8,10 @@ const headerOptions = {
   headerShadowVisible: false,
 } as const;
 
+// Keeps the Circles list underneath a feed opened from elsewhere, so the
+// feed always has a back arrow to Circles.
+export const unstable_settings = { anchor: "index" };
+
 export default function CirclesLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>

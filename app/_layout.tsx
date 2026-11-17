@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 
-// Root layout: onboarding, the five (tabs), and the check-in flow.
-// Check-in slides up over the tabs, so the tab bar is hidden during it.
+// Root layout: onboarding, the five (tabs), the check-in flow and stories.
+// Check-in and stories slide up over the tabs, so the tab bar is hidden.
 export default function RootLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -9,6 +9,7 @@ export default function RootLayout() {
         name="checkin"
         options={{ presentation: "fullScreenModal" }}
       />
+      <Stack.Screen name="story" options={{ presentation: "fullScreenModal" }} />
     </Stack>
   );
 }
