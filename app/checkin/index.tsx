@@ -5,7 +5,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../../components/Button";
 import { colours, radius, sizes, space, type } from "../../constants/theme";
 import { dailySpecial } from "../../data/seed";
@@ -23,6 +23,9 @@ export default function CameraScreen() {
   const [facing, setFacing] = useState<"back" | "front">("back");
   const [selfieOn, setSelfieOn] = useState(true);
   const [photo, setPhoto] = useState<string>(); // set once the main photo is taken
+  // Phone-level safe area (notch, home bar). Measured once for the whole
+  // screen, so it stays right even while the camera slides up.
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (!params.id) {
@@ -71,7 +74,7 @@ export default function CameraScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={[styles.screen, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       <StatusBar style="light" />
       <View style={styles.top}>
         <Pressable
@@ -165,7 +168,7 @@ export default function CameraScreen() {
           Selfie is optional · tap it to turn {selfieOn ? "off" : "on"}
         </Text>
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
