@@ -10,7 +10,7 @@ import DataService, { getChallenge } from "../../../services/DataService";
 import { AppData } from "../../../types";
 import { formatTime, formatWhen } from "../../../utils/time";
 
-// Figma 03 Today: plants, Family check-ins, Daily Special and everyday
+// Today: plants, circle check-ins, Daily Special and everyday
 // challenges (US01, US03, US09, US14).
 export default function TodayScreen() {
   const [data, setData] = useState<AppData>();
@@ -39,12 +39,17 @@ export default function TodayScreen() {
   );
   const scheduled = data.tasks.filter((t) => t.status === "scheduled");
 
-  // Who in Family has checked in (posted) so far.
-  const family = data.circles.find((c) => c.id === "family");
-  const posted = (name: string) =>
+  // The circle someone last shared with, or undefined if they haven't posted.
+  const storyCircle = (name: string) =>
     name === "You"
-      ? data.checkIns.some((c) => c.audience === "family")
-      : data.posts.some((p) => p.circleId === "family" && p.author === name);
+      ? data.checkIns.find((c) => c.audience !== "private")?.audience
+      : data.posts.find((p) => p.author === name)?.circleId;
+  // Everyone across all your circles, each name once: You first, then
+  // people who have posted, then everyone else.
+  const order = (name: string) => (name === "You" ? 0 : storyCircle(name) ? 1 : 2);
+  const people = [...new Set(data.circles.flatMap((c) => c.members))].sort(
+    (a, b) => order(a) - order(b),
+  );
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -61,49 +66,48 @@ export default function TodayScreen() {
           </View>
         </View>
 
-        {family && (
-          <View>
-            <Text style={styles.sectionLabel}>Family today</Text>
-            <View style={styles.family}>
-              {family.members.map((name) => {
-                const isYou = name === "You";
-                const hasPosted = posted(name);
-                // Your turn opens the camera; anyone who has posted opens their story
-                const open = () =>
-                  isYou && !hasPosted
-                    ? router.push("/checkin")
-                    : router.push({ pathname: "/story", params: { author: name, circle: family.id } });
-                return (
-                  <Pressable
-                    key={name}
-                    onPress={open}
-                    disabled={!isYou && !hasPosted}
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      isYou
-                        ? hasPosted
-                          ? "You have checked in today"
-                          : "Your turn: check in with a photo"
-                        : `${name}, ${hasPosted ? "checked in today" : "hasn't checked in yet"}`
-                    }
-                    style={({ pressed }) => [styles.member, pressed && styles.pressed]}
+        <View>
+          <Text style={styles.sectionLabel}>Your circles today</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.family}>
+            {people.map((name) => {
+              const isYou = name === "You";
+              const circle = storyCircle(name);
+              const hasPosted = circle !== undefined;
+              // Your turn opens the camera; anyone who has posted opens their story
+              const open = () =>
+                isYou && !hasPosted
+                  ? router.push("/checkin")
+                  : router.push({ pathname: "/story", params: { author: name, circle } });
+              return (
+                <Pressable
+                  key={name}
+                  onPress={open}
+                  disabled={!isYou && !hasPosted}
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    isYou
+                      ? hasPosted
+                        ? "You have checked in today"
+                        : "Your turn: check in with a photo"
+                      : `${name}, ${hasPosted ? "checked in today" : "hasn't checked in yet"}`
+                  }
+                  style={({ pressed }) => [styles.member, pressed && styles.pressed]}
+                >
+                  <View
+                    style={[
+                      styles.avatar,
+                      isYou && styles.avatarYou,
+                      hasPosted && styles.avatarPosted,
+                    ]}
                   >
-                    <View
-                      style={[
-                        styles.avatar,
-                        isYou && styles.avatarYou,
-                        hasPosted && styles.avatarPosted,
-                      ]}
-                    >
-                      <Text style={styles.initial}>{name[0]}</Text>
-                    </View>
-                    <Text style={styles.memberName}>{isYou ? (hasPosted ? "You" : "Your turn") : name}</Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
-        )}
+                    <Text style={styles.initial}>{name[0]}</Text>
+                  </View>
+                  <Text style={styles.memberName}>{isYou ? (hasPosted ? "You" : "Your turn") : name}</Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+        </View>
 
         <Pressable
           onPress={() => openChallenge(special.id)}

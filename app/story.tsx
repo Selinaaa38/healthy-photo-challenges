@@ -11,7 +11,7 @@ import { AppData } from "../types";
 import { timeAgo } from "../utils/time";
 
 // A circle member's latest check-in, full screen like a story, opened from
-// the "Family today" row on Today. Closing returns to Today.
+// the "Your circles today" row on Today. Tapping anywhere closes it, like a story.
 export default function StoryScreen() {
   const { author, circle } = useLocalSearchParams<{ author: string; circle: string }>();
   const [data, setData] = useState<AppData>();
@@ -36,7 +36,8 @@ export default function StoryScreen() {
   const challenge = getChallenge(story.challengeId);
 
   return (
-    <View style={styles.screen}>
+    // accessible={false} keeps the text readable by VoiceOver; the ✕ is the labelled close button
+    <Pressable style={styles.screen} onPress={() => router.back()} accessible={false}>
       <StatusBar style="light" />
       <Image
         source={story.photo}
@@ -74,7 +75,7 @@ export default function StoryScreen() {
         </Text>
         {story.caption ? <Text style={styles.caption}>{story.caption}</Text> : null}
       </View>
-    </View>
+    </Pressable>
   );
 }
 
