@@ -6,7 +6,7 @@ import { Button } from "../../components/Button";
 import { colours, radius, sizes, space, type } from "../../constants/theme";
 
 // Preview: check the photo, add an optional caption (US04).
-// B6: "Delete photo
+// B6: "Delete photo" asks first, so a photo is never thrown away by accident.
 export default function PreviewScreen() {
   const { id, photo, selfie } = useLocalSearchParams<{ id: string; photo: string; selfie?: string }>();
   const [caption, setCaption] = useState("");

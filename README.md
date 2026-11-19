@@ -2,31 +2,55 @@
 
 COMP4511 T3 2026 beta application, built with React Native and Expo.
 
-Healthy Photo Challenges suggests short, personalised wellbeing challenges. Users record each one with a photo, keep it private or share it with a trusted support circle, and grow a virtual garden as they go.
+Healthy Photo Challenges suggests short, personalised wellbeing challenges. Users record each one with a photo, keep it private or share it with a trusted support circle, and grow a virtual world as they go.
 
 ## Requirements
 
-- Node.js 20 or later (LTS recommended)
+- Node.js 20 or later
 - npm
 - The Expo Go app on an iPhone or Android phone
 
 ## Run the app
 
+The app runs through an Expo tunnel, so it works on any network without the phone and computer needing to be on the same Wi-Fi.
+Sign up for a free Expo account at https://expo.dev/signup.
+
 ```bash
 npm install
-npx expo start
-```
-
-Scan the QR code with your phone's camera (iPhone) or the Expo Go app (Android).
-
-If your phone can't reach the computer (for example on university Wi-Fi), either:
-
-- connect the computer to your phone's hotspot and run `npx expo start` again, or
-- start it through a tunnel, which needs a free Expo account:
-
-```bash
 npx expo login
 npm run tunnel
 ```
 
-_More setup details, a demo walkthrough and the user story coverage table will be added before submission._
+If Expo asks to install `@expo/ngrok`, press **Y**. When the QR code appears, scan it with your phone's camera (iPhone) or the Expo Go app (Android).
+
+To reset all data to the starting state of demo from the Welcome screen, open **Profile → Reset demo data**.
+
+## Project structure
+
+```
+app/                 screens (Expo Router: each file is a route)
+  _layout.tsx        root stack; check-in and stories open full screen
+  index.tsx          sends you to Welcome or Today
+  onboarding/        Welcome and preferences
+  (tabs)/            Today, Circles, Check in (camera button), Rewards, Profile
+  checkin/           camera, preview, audience, complete
+  story.tsx          full-screen story from the Today row
+components/          reusable UI (Button, Chip, ChallengeRow, PostCard, ...)
+constants/theme.ts   colours, spacing, text styles and sizes
+data/seed.ts         challenges and the demo data the app starts with
+services/DataService.ts  loads and saves app data with AsyncStorage
+types/index.ts       shared TypeScript types
+utils/time.ts        date and time formatting
+assets/images/       one photo per challenge, plus the Welcome and demo post photos
+```
+
+## Known limitations
+
+- There is no server or account. Data is stored only on this phone, and other people's posts are simulated demo data.
+- Inviting people to a circle uses a fixed list of contacts; searching by username is not built yet.
+- Daily Special alerts can be switched on and off, but no real notifications are sent.
+- The app is designed for iPhone in light mode.
+
+## Built with
+
+Expo SDK 58, React Native 0.88, React 19, TypeScript, Expo Router, expo-camera, expo-image-picker, AsyncStorage and @react-native-picker/picker.
