@@ -1,13 +1,13 @@
 import { StyleSheet, View } from "react-native";
 import { colours } from "../constants/theme";
 
-// Segmented plant progress bar, e.g. 9 of 12 plants grown.
 type ProgressBarProps = {
   value: number;
   total: number;
   highlightLatest?: boolean;
 };
 
+// Reusable progress bar
 export function ProgressBar({
   value,
   total,

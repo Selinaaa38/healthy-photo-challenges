@@ -10,20 +10,19 @@ import DataService, { getChallenge } from "../services/DataService";
 import { AppData } from "../types";
 import { timeAgo } from "../utils/time";
 
-// A circle member's latest check-in, full screen like a story, opened from
-// the "Your circles today" row on Today. Tapping anywhere closes it, like a story.
 export default function StoryScreen() {
   const { author, circle } = useLocalSearchParams<{ author: string; circle: string }>();
   const [data, setData] = useState<AppData>();
   const insets = useSafeAreaInsets();
 
+  // Load saved check-ins and circle posts
   useEffect(() => {
     DataService.getData().then(setData);
   }, []);
 
   if (!data) return null;
 
-  // Your own story is your latest check-in shared with this circle
+  // Find selected user's story and photo
   const mine = data.checkIns.find((c) => c.audience === circle);
   const theirs = data.posts.find((p) => p.circleId === circle && p.author === author);
   const story =
@@ -36,7 +35,7 @@ export default function StoryScreen() {
   const challenge = getChallenge(story.challengeId);
 
   return (
-    // accessible={false} keeps the text readable by VoiceOver; the ✕ is the labelled close button
+    // Tap anywhere to close story
     <Pressable style={styles.screen} onPress={() => router.back()} accessible={false}>
       <StatusBar style="light" />
       <Image
@@ -54,6 +53,7 @@ export default function StoryScreen() {
           <Text style={styles.author}>{author}</Text>
           <View style={styles.metaRow}>
             <Ionicons name="lock-closed" size={12} color={colours.onImageMuted} />
+            {/* Show which circle can see story and when it was posted. */}
             <Text style={styles.meta}>
               {circleName} only · {timeAgo(story.createdAt)}
             </Text>

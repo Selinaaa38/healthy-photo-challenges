@@ -7,8 +7,9 @@ import { Button } from "../../components/Button";
 import { colours, space, type } from "../../constants/theme";
 import DataService from "../../services/DataService";
 
-// Figma 01 Welcome: full-screen photo with the two ways to start (US01, US02).
+// Full-screen photo with the two ways to start (US01, US02).
 export default function WelcomeScreen() {
+  // Start with default challenges without setting preferences
   const exploreFirst = async () => {
     await DataService.start();
     router.replace("/today");

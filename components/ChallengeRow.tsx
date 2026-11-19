@@ -9,13 +9,14 @@ import {
 } from "react-native";
 import { colours, type } from "../constants/theme";
 
-// One everyday challenge in the Today list
+// Reusable challenge row for the Today screen.
+// Displays the challenge image, title, duration, goal and status.
 type ChallengeRowProps = {
   title: string;
   minutes: number;
   goal: string;
   image?: ImageSourcePropType;
-  status?: string; // "Done" or "Skipped"
+  status?: string;
   onPress: () => void;
 };
 

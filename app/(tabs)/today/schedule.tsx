@@ -11,13 +11,13 @@ import DataService from "../../../services/DataService";
 import { formatTime } from "../../../utils/time";
 
 const presetTimes = ["07:30", "12:30", "19:00"];
-// Every half hour from 6 am to 10 pm, for "Other time" (B4)
+// B4: Every half hour from 6 am to 10 pm, for "Other time"
 const allTimes = Array.from({ length: 33 }, (_, i) => {
   const minutes = 6 * 60 + i * 30;
   return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${minutes % 60 ? "30" : "00"}`;
 });
 
-// The date `daysAhead` days from now at "HH:MM".
+// Convert the selected day to time into Date object
 const toDate = (daysAhead: number, time: string) => {
   const [hours, minutes] = time.split(":").map(Number);
   const date = new Date();
@@ -28,16 +28,15 @@ const toDate = (daysAhead: number, time: string) => {
 
 const dayLabel = (date: Date) => date.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" });
 
-// Schedule for later. The challenge then waits in Upcoming on
-// Today (US09). B4 adds "Other time" for any half-hour slot.
+// Schedule for later. The challenge then waits in Upcoming on Today (US09). 
+// B4: adds "Other time" for half-hour slot selected
 export default function ScheduleSheet() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [daysAhead, setDaysAhead] = useState(1); // 0 today, 1 tomorrow, 2-7 a picked date
+  const [daysAhead, setDaysAhead] = useState(1);
   const [time, setTime] = useState("19:00");
   const [showOtherTimes, setShowOtherTimes] = useState(false);
   const [showDates, setShowDates] = useState(false);
 
-  // Times that have already passed today are hidden.
   const isFuture = (t: string) => toDate(daysAhead, t) > new Date();
   const when = toDate(daysAhead, time);
   const canSchedule = when > new Date();

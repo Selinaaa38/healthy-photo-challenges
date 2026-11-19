@@ -2,8 +2,7 @@ import { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { colours, sizes, space, type } from "../constants/theme";
 
-// Layout shared by the "Not right now?" sheets
-// title, subtitle, then the sheet's own content and buttons.
+// Reusable bottom sheet layout for challenge options.
 type SheetProps = {
   title: string;
   subtitle: string;

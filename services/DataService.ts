@@ -16,13 +16,12 @@ export const getChallenge = (id: string) => challenges.find((c) => c.id === id)!
 const isExcluded = (activity: string | undefined, prefs: Preferences | null) =>
   !!activity && !!prefs?.excluded.includes(activity);
 
-// Up to 3 challenges that fit the user's goals, time and exclusions,
-// with challenges they enjoy first
+// Filter and select challenges
 export const suggestChallenges = (prefs: Preferences) => {
   const fits = challenges.filter(
     (c) =>
       c.id !== dailySpecial.challengeId &&
-      c.id !== swapChallengeIds.easier && // kept for "Not right now?"
+      c.id !== swapChallengeIds.easier &&
       c.id !== swapChallengeIds.different &&
       (prefs.goals.length === 0 || prefs.goals.includes(c.goal)) &&
       c.minutes <= prefs.minutes &&
@@ -33,15 +32,14 @@ export const suggestChallenges = (prefs: Preferences) => {
   return ids.length > 0 ? ids.slice(0, 3) : generalChallengeIds;
 };
 
-// "Something easier" always offers push-ups and "Different activity" always
-// offers a kind note. Opened from one of those, it offers the other (US08).
+// Select easier or differenc challenge
 export const getAlternative = (id: string, kind: "easier" | "different") => {
   const offered = swapChallengeIds[kind];
   const other = swapChallengeIds[kind === "easier" ? "different" : "easier"];
   return getChallenge(id === offered ? other : offered);
 };
 
-// B1: returns an error message, or null if the name
+// B1: Validate circle name for empty, long or duplication
 export const circleNameError = (name: string, circles: Circle[]) => {
   const trimmed = name.trim();
   if (trimmed === "") return "Enter a name for your circle";
@@ -52,7 +50,6 @@ export const circleNameError = (name: string, circles: Circle[]) => {
   return null;
 };
 
-// "You, Taylor, Vanessa and Mum" for small circles, "5 people" for bigger ones.
 export const describeMembers = (circle: Circle) =>
   circle.members.length === 1
     ? "Just you so far"
@@ -60,7 +57,7 @@ export const describeMembers = (circle: Circle) =>
       ? `${circle.members.slice(0, -1).join(", ")} and ${circle.members.at(-1)}`
       : `${circle.members.length} people`;
 
-// Replaces the task for a challenge, or adds it if it isn't on the list.
+// Add or replace a task in current task list
 const setTask = (data: AppData, oldId: string, task: Task) => {
   const index = data.tasks.findIndex((t) => t.challengeId === oldId);
   if (index === -1) data.tasks.push(task);
@@ -68,12 +65,13 @@ const setTask = (data: AppData, oldId: string, task: Task) => {
 };
 
 export default {
+  // Load saved data or use initial data if none exists
   async getData(): Promise<AppData> {
     const json = await AsyncStorage.getItem(STORAGE_KEY);
     return json ? JSON.parse(json) : createInitialData();
   },
 
-  // Loads the data, applies a change and saves it.
+  // Apply changes and save updated data
   async update(change: (data: AppData) => void): Promise<AppData> {
     const data = await this.getData();
     change(data);
@@ -81,12 +79,12 @@ export default {
     return data;
   },
 
-  // True once onboarding is finished, because something has been saved.
+  // Check if app has ben set up
   async isSetUp(): Promise<boolean> {
     return (await AsyncStorage.getItem(STORAGE_KEY)) !== null;
   },
 
-  // Saves fresh starting data ("Explore first" and "Skip for now").
+  // Start with default and demo data
   async start(): Promise<AppData> {
     const data = createInitialData();
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -98,6 +96,7 @@ export default {
     await AsyncStorage.removeItem(STORAGE_KEY);
   },
 
+  // Save preferences and generate personalised challenges
   savePreferences(prefs: Preferences) {
     return this.update((data) => {
       data.preferences = prefs;
@@ -105,7 +104,7 @@ export default {
     });
   },
 
-  // One plant per completed challenge (US07).
+  // Save checkin, complete task and award one plant (US07).
   completeChallenge(
     challengeId: string,
     photoUri: string,
@@ -128,24 +127,26 @@ export default {
     });
   },
 
+  // Replace current challenge with alternative
   swapChallenge(oldId: string, newId: string) {
     return this.update((data) => setTask(data, oldId, { challengeId: newId, status: "active" }));
   },
 
+  // Save future date and time for challenge
   scheduleChallenge(challengeId: string, scheduledFor: string) {
     return this.update((data) =>
       setTask(data, challengeId, { challengeId, status: "scheduled", scheduledFor }),
     );
   },
 
-  // Skipping never removes plants, so progress is kept (US10).
+  // Mark challenge as skipped without reward loss (US10).
   skipChallenge(challengeId: string, skipReason: string, skipNote: string) {
     return this.update((data) =>
       setTask(data, challengeId, { challengeId, status: "skipped", skipReason, skipNote }),
     );
   },
 
-  // Undo a skip: the challenge is back on today's list.
+  // Undo a skip
   undoSkip(challengeId: string) {
     return this.update((data) => setTask(data, challengeId, { challengeId, status: "active" }));
   },
@@ -161,6 +162,7 @@ export default {
     });
   },
 
+  // Add a comment to a post
   addComment(postId: string, text: string) {
     return this.update((data) => {
       data.posts
@@ -169,20 +171,21 @@ export default {
     });
   },
 
-  // Figma 17: change who can see a check-in after posting.
+  // Update who can see an existing check-in
   changeAudience(checkInId: string, audience: Audience) {
     return this.update((data) => {
       data.checkIns.find((c) => c.id === checkInId)!.audience = audience;
     });
   },
 
-  // Figma 18: deleting removes the photo but keeps the plant and progress.
+  // Delete a check-in while keeping earned rewards
   deleteCheckIn(checkInId: string) {
     return this.update((data) => {
       data.checkIns = data.checkIns.filter((c) => c.id !== checkInId);
     });
   },
 
+  // Remove a comment from post
   deleteComment(postId: string, commentId: string) {
     return this.update((data) => {
       const post = data.posts.find((p) => p.id === postId)!;
@@ -190,7 +193,7 @@ export default {
     });
   },
 
-  // Leaving removes the circle, so you no longer see its posts (US13).
+  // Remove a circle from user's list
   leaveCircle(circleId: string) {
     return this.update((data) => {
       data.circles = data.circles.filter((c) => c.id !== circleId);
@@ -198,13 +201,14 @@ export default {
   },
 
   // Invited people stay pending and can't see posts until they accept (US12).
+  // Create circle with pending invite
   createCircle(name: string, invited: string[]) {
     return this.update((data) => {
       data.circles.push({ id: Date.now().toString(), name: name.trim(), members: ["You"], pending: invited });
     });
   },
 
-  // Accepting adds the circle; declining just removes the invitation (US13).
+  // Accepting adds the circle; declining removes the invitation (US13).
   answerInvitation(invitationId: string, accept: boolean) {
     return this.update((data) => {
       const invitation = data.invitations.find((i) => i.id === invitationId)!;

@@ -14,19 +14,20 @@ const kinds = [
 ] as const;
 
 // Swap for an easier or different challenge (US08).
-// Nothing changes until "Use this instead" is tapped.
 export default function EasierSheet() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [data, setData] = useState<AppData>();
   const [kind, setKind] = useState<"easier" | "different">("easier");
 
+  // Load current task list
   useEffect(() => {
     DataService.getData().then(setData);
   }, []);
 
   if (!data) return null;
   const alternative = getAlternative(id, kind);
-  // Swapping to a challenge already on today's list would add it twice
+
+  // Prevent duplication of challenge
   const alreadyOnList = data.tasks.some((t) => t.challengeId === alternative.id);
 
   const useAlternative = async () => {

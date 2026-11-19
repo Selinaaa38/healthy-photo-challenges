@@ -2,15 +2,15 @@ import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import DataService from "../services/DataService";
 
-// App entry point. Redirecting to Welcome the first time, or straight to Today once
-// onboarding is finished.
 export default function IndexScreen() {
   const [isSetUp, setIsSetUp] = useState<boolean | null>(null);
 
+  // Check whether onboarding has been completed
   useEffect(() => {
     DataService.isSetUp().then(setIsSetUp);
   }, []);
 
-  if (isSetUp === null) return null; // still checking storage
+  // Redirect to Today or onboarding based on saved data
+  if (isSetUp === null) return null;
   return <Redirect href={isSetUp ? "/today" : "/onboarding"} />;
 }

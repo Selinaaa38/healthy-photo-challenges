@@ -3,9 +3,6 @@ import { router, Tabs } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { colours } from "../../constants/theme";
 
-// The five Expo Router tabs: Today, Circles, Check in, Rewards, Profile.
-// The centre "Check in" tab is a black camera button which opens the check-in 
-// flow over the tabs.
 export default function TabLayout() {
   return (
     <Tabs
@@ -43,6 +40,7 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="camera"
+        // Camera button
         options={{
           tabBarLabel: () => null,
           tabBarAccessibilityLabel: "Check in with a photo",
@@ -53,6 +51,8 @@ export default function TabLayout() {
           ),
         }}
         listeners={{
+
+          // Open check-in
           tabPress: (event) => {
             event.preventDefault();
             router.push("/checkin");

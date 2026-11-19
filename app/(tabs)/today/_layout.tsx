@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { colours } from "../../../constants/theme";
 
-// The "Something easier" and "Skip" sheets slide up from the bottom
+// Bottom sheet easier and skip options
 const sheetOptions = {
   presentation: "formSheet",
   sheetAllowedDetents: "fitToContents",
@@ -22,7 +22,6 @@ export default function TodayLayout() {
         }}
       />
       <Stack.Screen name="easier" options={sheetOptions} />
-      {/* Full-height so the date and time wheels have room (B4) */}
       <Stack.Screen name="schedule" options={{ presentation: "modal" }} />
       <Stack.Screen name="skip" options={sheetOptions} />
     </Stack>

@@ -3,14 +3,14 @@ import { PreferencesForm } from "../../components/PreferencesForm";
 import DataService from "../../services/DataService";
 import { Preferences } from "../../types";
 
-// Figma 02: first-time preferences, reached from Welcome.
 export default function OnboardingPreferencesScreen() {
+  // Save preferences and navigate to Today challenges screen
   const save = async (prefs: Preferences) => {
     await DataService.savePreferences(prefs);
     router.replace("/today");
   };
 
-  // Same as "Explore first": the 3 general challenges (US01).
+  // Same as screen as "Explore first" for 3 general challenges (US01).
   const skip = async () => {
     await DataService.start();
     router.replace("/today");

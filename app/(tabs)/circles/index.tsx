@@ -8,7 +8,7 @@ import { colours, radius, sizes, space, type } from "../../../constants/theme";
 import DataService, { describeMembers } from "../../../services/DataService";
 import { AppData } from "../../../types";
 
-// Circles: invitations to accept or decline (US13) and your circles.
+// Circles: invitations to accept or decline and circles (US13)
 export default function CirclesScreen() {
   const [data, setData] = useState<AppData>();
 
@@ -20,6 +20,7 @@ export default function CirclesScreen() {
 
   if (!data) return null;
 
+  // Accept or decline invite and update screen
   const answer = async (invitationId: string, accept: boolean) => {
     setData(await DataService.answerInvitation(invitationId, accept));
   };

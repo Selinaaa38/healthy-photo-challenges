@@ -11,9 +11,9 @@ import { colours, radius, sizes, space, type } from "../../constants/theme";
 import { dailySpecial } from "../../data/seed";
 import DataService, { getChallenge } from "../../services/DataService";
 
-// Camera (US04). Opened from a challenge, or from the camera tab,
+// Camera (US04). Opened from a challenge, or from the camera tab
 // which picks the first challenge still to do.
-// B3: the selfie is labelled and can be turned off. With it on, the camera
+// B3: selfie is labelled and can be turned off. With it on, the camera
 // flips to the front for a second photo after the main one.
 export default function CameraScreen() {
   const params = useLocalSearchParams<{ id?: string }>();
@@ -22,11 +22,12 @@ export default function CameraScreen() {
   const camera = useRef<CameraView>(null);
   const [facing, setFacing] = useState<"back" | "front">("back");
   const [selfieOn, setSelfieOn] = useState(true);
-  const [photo, setPhoto] = useState<string>(); // set once the main photo is taken
-  // Phone-level safe area (notch, home bar). Measured once for the whole
-  // screen, so it stays right even while the camera slides up.
+  const [photo, setPhoto] = useState<string>();
+
+  // Placement of camera control away from notch
   const insets = useSafeAreaInsets();
 
+  // First active challenge when opened from camera tab
   useEffect(() => {
     if (!params.id) {
       DataService.getData().then((data) => {
@@ -39,16 +40,17 @@ export default function CameraScreen() {
   if (!id || !permission) return null;
   const challenge = getChallenge(id);
 
+  // photo URI to preview and reset camera for retakes
   const goToPreview = (photoUri: string, selfieUri?: string) => {
     router.navigate({
       pathname: "/checkin/preview",
       params: { id, photo: photoUri, selfie: selfieUri },
     });
-    // Ready for a retake if they come back
     setPhoto(undefined);
     setFacing("back");
   };
 
+  // Capture main photo then optonal front-camera selfie
   const takePicture = async () => {
     const picture = await camera.current?.takePictureAsync({ quality: 0.7 });
     if (!picture) return;
@@ -62,7 +64,7 @@ export default function CameraScreen() {
     }
   };
 
-  // Gallery upload as an alternative
+  // Request gallery permisson to select photo
   const pickFromGallery = async () => {
     const permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissions.granted) {

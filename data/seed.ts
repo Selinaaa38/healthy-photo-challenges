@@ -1,11 +1,8 @@
 import { ImageSourcePropType } from "react-native";
 import { AppData, Challenge } from "../types";
 
-// Seed data: the challenge catalogue and the starting app data.
-// Simulated personal suggestions
-
+// Seed data
 export const challenges: Challenge[] = [
-  // Move
   {
     id: "walk-campus",
     image: require("../assets/images/walk-campus.jpg"),
@@ -72,7 +69,6 @@ export const challenges: Challenge[] = [
     minutes: 5,
     steps: ["Roll out a mat or towel", "Follow five slow poses", "Snap your space"],
   },
-  // Rest
   {
     id: "lights-out",
     image: require("../assets/images/lights-out.jpg"),
@@ -108,7 +104,6 @@ export const challenges: Challenge[] = [
     minutes: 20,
     steps: ["Choose a paper book", "Read one chapter", "Snap the page you stopped on"],
   },
-  // Nourish
   {
     id: "fruit-snack",
     image: require("../assets/images/fruit-snack.jpg"),
@@ -126,7 +121,6 @@ export const challenges: Challenge[] = [
     minutes: 20,
     steps: ["Pick three colourful vegetables", "Cook a simple meal with them", "Snap your plate"],
   },
-  // Unwind
   {
     id: "album",
     image: require("../assets/images/album.jpg"),
@@ -153,7 +147,6 @@ export const challenges: Challenge[] = [
     minutes: 5,
     steps: ["Grab a notebook", "Write three good things from today", "Snap your list"],
   },
-  // Hydrate
   {
     id: "water-bottle",
     image: require("../assets/images/water-bottle.jpg"),
@@ -193,39 +186,30 @@ export const challenges: Challenge[] = [
   },
 ];
 
-// Always shown by "Something easier" and "Different activity", so the
-// swap works the same way every time (US08).
+// Always shown by "Something easier" and "Different activity" (US08).
 export const swapChallengeIds = { easier: "push-ups", different: "kind-note" } as const;
 
-// Shown after "Explore first", before any preferences are set
 export const generalChallengeIds = ["walk-campus", "fruit-snack", "lights-out"];
 
-// Today's Daily Special, released to everyone in the time-zone group.
 export const dailySpecial = {
   challengeId: "sunset-meditation",
   closesAt: "20:00",
 };
 
-// Photo for each post from another member. Kept out of AppData so the
-// saved data stays plain JSON.
 export const postImages: Record<string, ImageSourcePropType> = {
   "post-vanessa": require("../assets/images/meal.jpg"),
 };
 
-// Options shown on the preferences screen.
 export const goalOptions = ["Move", "Rest", "Nourish", "Unwind", "Hydrate"] as const;
 export const interestOptions = ["Walking", "Meditating", "Cooking", "Reading", "Music"];
 export const excludeOptions = ["Running", "Gym", "Yoga"];
 export const minuteOptions = [5, 10, 20] as const;
 
-// Rewards
 export const plantsPerWorld = 12;
 export const worlds = ["Spring meadow", "Riverbank", "Mountain grove"];
 
-// People who can be invited to a new circle.
 export const contacts = ["Taylor", "Vanessa", "Sam", "Jordan"];
 
-// Starting data the first time the app opens, and after "Reset demo data".
 const hoursAgo = (hours: number) =>
   new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
 

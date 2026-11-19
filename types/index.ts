@@ -8,7 +8,7 @@ export type Challenge = {
   id: string;
   title: string;
   goal: Goal;
-  activity?: string; // matches an "I enjoy" / "Never suggest" chip, e.g. "Walking"
+  activity?: string; // matches an "I enjoy" / "Never suggest" chip
   minutes: number;
   steps: string[];
   image: ImageSourcePropType; // photo in assets/images
@@ -28,7 +28,7 @@ export type Task = {
   challengeId: string;
   status: TaskStatus;
   scheduledFor?: string; // ISO date and time, for "Schedule for later"
-  skipReason?: string; // "Too busy", "Not interested", ...
+  skipReason?: string; // "Too busy", "Not interested"
   skipNote?: string;
 };
 
@@ -52,7 +52,7 @@ export type Comment = {
   createdAt: string;
 };
 
-export type Reactions = Record<"cheer" | "love" | "metoo", string[]>; // who reacted
+export type Reactions = Record<"cheer" | "love" | "metoo", string[]>;
 
 // A post from another member of a circle (simulated in the seed data).
 export type Post = {

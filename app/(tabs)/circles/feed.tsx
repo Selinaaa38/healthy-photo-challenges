@@ -16,12 +16,14 @@ const reactionTypes = [
 ] as const;
 
 // Circle feed: posts only this circle can see, with reactions and
-// comments (US06). F8: each post says who can see it ("Family only").
-// B5: your reaction is clearly marked and can be tapped again to undo.
+// comments (US06). 
+// F8: each post says who can see it ("Family only").
+// B5: reaction marked and can be tapped again to undo.
+// Leave this circle, after a confirmation (US13)
 export default function CircleFeedScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [data, setData] = useState<AppData>();
-  const [drafts, setDrafts] = useState<Record<string, string>>({}); // comment per post
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
 
   useFocusEffect(
     useCallback(() => {
@@ -41,6 +43,7 @@ export default function CircleFeedScreen() {
     setDrafts({ ...drafts, [postId]: "" });
   };
 
+  // Confirm before deleting comment / leaving circle
   const deleteComment = (postId: string, commentId: string) => {
     Alert.alert("Delete your comment?", undefined, [
       { text: "Cancel", style: "cancel" },
@@ -77,7 +80,8 @@ export default function CircleFeedScreen() {
       reactedByMe: post.reactions[r.id].includes("You"),
     }));
 
-  // Other members' posts and your own check-ins shared here, newest first
+  // Combine circle post and shared check-ins
+  // Sort by newest
   const items = [
     ...data.posts.filter((p) => p.circleId === circle.id).map((post) => ({ post, createdAt: post.createdAt })),
     ...data.checkIns.filter((c) => c.audience === circle.id).map((checkIn) => ({ checkIn, createdAt: checkIn.createdAt })),
@@ -90,7 +94,6 @@ export default function CircleFeedScreen() {
       <Stack.Screen
         options={{
           title: circle.name,
-          // Leave this circle, after a confirmation (US13)
           headerRight: () => (
             <Pressable
               onPress={confirmLeave}
@@ -137,7 +140,7 @@ export default function CircleFeedScreen() {
                 goal={getChallenge(checkIn.challengeId).goal}
                 photo={{ uri: checkIn.photoUri }}
                 selfie={checkIn.selfieUri ? { uri: checkIn.selfieUri } : undefined}
-                caption={checkIn.caption || undefined} // "" would break the layout
+                caption={checkIn.caption || undefined}
                 reactions={[]}
                 onReact={() => {}}
               />

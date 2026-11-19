@@ -8,20 +8,26 @@ import { contacts } from "../../../data/seed";
 import DataService, { circleNameError } from "../../../services/DataService";
 import { Circle } from "../../../types";
 
-// New circle (US12). B1: the name is checked (not blank, 30
-// characters or fewer, not already used) and creating is confirmed.
+// New circle (US12). 
+// B1: the name is checked for conditions
+// - not blank
+// - 30 characters or fewer
+// - not already used 
+// creating is confirmed.
 export default function CreateCircleScreen() {
   const [circles, setCircles] = useState<Circle[]>([]);
   const [name, setName] = useState("");
   const [invited, setInvited] = useState<string[]>([]);
-  const [showError, setShowError] = useState(false); // after the first try
+  const [showError, setShowError] = useState(false);
 
+  // Load existing circles and check for duplicate
   useEffect(() => {
     DataService.getData().then((data) => setCircles(data.circles));
   }, []);
 
   const error = circleNameError(name, circles);
 
+  // Add/remove person rom invite list
   const toggle = (person: string) =>
     setInvited(invited.includes(person) ? invited.filter((p) => p !== person) : [...invited, person]);
 

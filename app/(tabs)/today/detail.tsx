@@ -8,7 +8,7 @@ import { dailySpecial } from "../../../data/seed";
 import DataService, { getChallenge } from "../../../services/DataService";
 import { AppData } from "../../../types";
 
-// "Not right now?" options, each opening a sheet
+// Nav for changing or skipping challenge
 const options = [
   { label: "Something easier", icon: "leaf-outline", pathname: "/today/easier" },
   { label: "Schedule for later", icon: "calendar-outline", pathname: "/today/schedule" },
@@ -21,6 +21,7 @@ export default function ChallengeDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [data, setData] = useState<AppData>();
 
+  // Refresh task status on return
   useFocusEffect(
     useCallback(() => {
       DataService.getData().then(setData);
@@ -36,7 +37,7 @@ export default function ChallengeDetailScreen() {
   const isSkipped = status === "skipped";
   const prefs = data.preferences;
 
-  // Explains the suggestion using the user's own preferences.
+  // Challenge match explaination
   const why = isSpecial
     ? "Today's Daily Special. It's optional and the same for everyone."
     : prefs
@@ -47,7 +48,7 @@ export default function ChallengeDetailScreen() {
         }, and prefer about ${prefs.minutes} minutes.`
       : "A general challenge to get you started. Set preferences in Profile to personalise.";
 
-  // The Daily Special can only be skipped.
+  // Skip option for Daily Special only
   const shownOptions = isSpecial ? options.slice(2) : options;
 
   return (
@@ -90,7 +91,7 @@ export default function ChallengeDetailScreen() {
         </View>
       </View>
 
-      {/* Hidden once skipped; "Undo skip" below brings it back */}
+      {/* Hide the button if skipped and disable if completed. */}
       {!isSkipped && (
         <Button
           label={isDone ? "Completed today" : "Start challenge"}
@@ -100,7 +101,7 @@ export default function ChallengeDetailScreen() {
         />
       )}
 
-      {/* Skipped: say so and offer an undo instead of the options again */}
+      {/* Restore a skipped challenge. */}
       {isSkipped && (
         <View style={styles.skippedRow}>
           <Text style={styles.notNow}>

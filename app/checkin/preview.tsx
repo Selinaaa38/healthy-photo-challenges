@@ -11,6 +11,7 @@ export default function PreviewScreen() {
   const { id, photo, selfie } = useLocalSearchParams<{ id: string; photo: string; selfie?: string }>();
   const [caption, setCaption] = useState("");
 
+  // Confirm before deleting photo
   const confirmDelete = () => {
     Alert.alert("Delete this photo?", "You'll go back to the camera to take a new one.", [
       { text: "Cancel", style: "cancel" },
@@ -23,7 +24,6 @@ export default function PreviewScreen() {
       style={styles.screen}
       contentContainerStyle={styles.content}
       contentInsetAdjustmentBehavior="automatic"
-      // Scrolls the caption field above the keyboard while typing
       automaticallyAdjustKeyboardInsets
       keyboardShouldPersistTaps="handled"
     >
@@ -31,6 +31,7 @@ export default function PreviewScreen() {
 
       <View>
         <Image source={{ uri: photo }} style={styles.photo} accessibilityLabel="Your check-in photo" />
+        {/* Show selfie overlay only if one taken. */}
         {selfie && (
           <Image source={{ uri: selfie }} style={styles.selfie} accessibilityLabel="Your selfie" />
         )}
@@ -66,6 +67,7 @@ export default function PreviewScreen() {
         style={styles.input}
       />
 
+      {/* Pass photo details and caption*/}
       <Button
         label="Next: choose who can see it"
         onPress={() =>

@@ -9,11 +9,10 @@ import DataService, { getChallenge } from "../../../services/DataService";
 import { AppData, Audience, CheckIn } from "../../../types";
 import { formatWhen } from "../../../utils/time";
 
-// Figma 16 Profile: preferences, Daily Special alerts (US14) and your
-// check-ins. Figma 17 and 18 (check-in options, delete) are Alerts.
 export default function ProfileScreen() {
   const [data, setData] = useState<AppData>();
 
+  // Refresh profile data
   useFocusEffect(
     useCallback(() => {
       DataService.getData().then(setData);
@@ -23,11 +22,14 @@ export default function ProfileScreen() {
   if (!data) return null;
 
   const prefs = data.preferences;
+
+  // Show selected audience name
   const audienceName = (audience: Audience) =>
     audience === "private"
       ? "Private"
       : (data.circles.find((c) => c.id === audience)?.name ?? "a circle you left");
 
+  //Save Daily Special alert preference
   const setAlerts = async (on: boolean) => {
     const newData = await DataService.update((d) => {
       d.specialAlerts = on;
@@ -35,7 +37,7 @@ export default function ProfileScreen() {
     setData(newData);
   };
 
-  // Figma 17: options for one check-in
+  // Allow users t change sharing permissions / delete check-ins
   const showOptions = (checkIn: CheckIn) => {
     const shared = audienceName(checkIn.audience);
     Alert.alert(
@@ -49,6 +51,7 @@ export default function ProfileScreen() {
     );
   };
 
+  // Update check-in visibility
   const chooseAudience = (checkIn: CheckIn) => {
     const options: Audience[] = ["private", ...data.circles.map((c) => c.id)];
     Alert.alert("Who can see this?", `Currently: ${audienceName(checkIn.audience)}`, [
@@ -60,7 +63,7 @@ export default function ProfileScreen() {
     ]);
   };
 
-  // Figma 18: confirm before deleting
+  // Confirm deletion but retain plants and progress
   const confirmDelete = (checkIn: CheckIn) => {
     const shared = checkIn.audience !== "private";
     Alert.alert(
@@ -77,6 +80,7 @@ export default function ProfileScreen() {
     );
   };
 
+  // Clear demo data and return to onboarding 
   const confirmReset = () => {
     Alert.alert("Reset demo data?", "This deletes your check-ins and settings.", [
       { text: "Cancel", style: "cancel" },

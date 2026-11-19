@@ -9,7 +9,6 @@ import { plantsPerWorld, worlds } from "../../data/seed";
 import DataService from "../../services/DataService";
 import { AppData, Theme } from "../../types";
 
-// Each theme draws the garden with its own icon.
 const themes = [
   { name: "Garden", icon: "leaf" },
   { name: "Pets", icon: "paw" },
@@ -20,6 +19,7 @@ const themes = [
 export default function RewardsScreen() {
   const [data, setData] = useState<AppData>();
 
+  // Refresh rewards when returning
   useFocusEffect(
     useCallback(() => {
       DataService.getData().then(setData);
@@ -28,6 +28,7 @@ export default function RewardsScreen() {
 
   if (!data) return null;
 
+  // Save reward theme selected
   const chooseTheme = async (theme: Theme) => {
     const newData = await DataService.update((d) => {
       d.theme = theme;
@@ -35,10 +36,9 @@ export default function RewardsScreen() {
     setData(newData);
   };
 
-  // A full world shows 12 of 12 until the next plant starts a new one
+  // Calculate plan progress and unlocked worlds
   const grown = data.plants % plantsPerWorld || (data.plants > 0 ? plantsPerWorld : 0);
   const toGo = plantsPerWorld - grown;
-  // A new world unlocks every 12 plants
   const unlocked = Math.min(Math.floor(data.plants / plantsPerWorld) + 1, worlds.length);
   const icon = themes.find((t) => t.name === data.theme)!.icon;
 
@@ -48,13 +48,12 @@ export default function RewardsScreen() {
         <Text style={styles.title} accessibilityRole="header">
           My garden
         </Text>
-
-        {/* The garden: grown plants in green, the newest in black, the rest faint */}
         <View
           style={styles.garden}
           accessible
           accessibilityLabel={`Your ${data.theme.toLowerCase()} with ${grown} of ${plantsPerWorld} plants`}
         >
+          {/* Filled icons for earned plants, outlines for the remaining */}
           <View style={styles.plants}>
             {Array.from({ length: plantsPerWorld }, (_, index) => {
               const isGrown = index < grown;

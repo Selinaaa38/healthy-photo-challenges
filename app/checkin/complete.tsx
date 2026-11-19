@@ -14,13 +14,14 @@ import { AppData } from "../../types";
 export default function CompleteScreen() {
   const [data, setData] = useState<AppData>();
 
+  // Load updated check-in and reward data.
   useEffect(() => {
     DataService.getData().then(setData);
   }, []);
 
   if (!data) return null;
 
-  // 1-12 in the current world; a full world shows 12 of 12
+  // calculate progress towards the next world
   const grown = data.plants % plantsPerWorld || plantsPerWorld;
   const toGo = plantsPerWorld - grown;
 
@@ -28,6 +29,7 @@ export default function CompleteScreen() {
     <SafeAreaView style={styles.screen}>
       <View style={styles.content}>
         <View>
+          {/* Display the most recently completed check-in photo. */}
           <Image
             source={{ uri: data.checkIns[0]?.photoUri }}
             style={styles.photo}

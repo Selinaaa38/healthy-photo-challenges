@@ -7,16 +7,15 @@ import { Goal, Minutes, Preferences } from "../types";
 import { Button } from "./Button";
 import { Chip } from "./Chip";
 
-// Figma 02 Preferences form, shared by onboarding and Profile (US02).
-
+// Shared preferences form for onboarding and Profile.
+// Lets users select goals, interests, exclusions and duration.
 type PreferencesFormProps = {
   initial: Preferences | null;
   saveLabel: string;
   onSave: (prefs: Preferences) => void;
-  onSkip?: () => void; // onboarding only
+  onSkip?: () => void;
 };
 
-// Adds the item if it isn't in the list, otherwise removes it.
 const toggle = <T,>(list: T[], item: T) =>
   list.includes(item) ? list.filter((i) => i !== item) : [...list, item];
 
@@ -28,7 +27,6 @@ export function PreferencesForm({ initial, saveLabel, onSave, onSkip }: Preferen
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
-      {/* "automatic" moves the content below the see-through iOS header */}
       <ScrollView
         contentContainerStyle={styles.content}
         contentInsetAdjustmentBehavior="automatic"

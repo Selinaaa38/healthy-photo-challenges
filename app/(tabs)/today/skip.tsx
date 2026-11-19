@@ -13,9 +13,12 @@ const reasons = ["Too busy", "Not interested", "Too difficult", "Not possible he
 // kept (US10).
 export default function SkipSheet() {
   const { id } = useLocalSearchParams<{ id: string }>();
+
+  // Storage optional skip reason and note (out of scope for future recommendations)
   const [reason, setReason] = useState("");
   const [note, setNote] = useState("");
 
+  // Save skipped task and return to Today screen
   const skip = async () => {
     await DataService.skipChallenge(id, reason, note.trim());
     router.dismissTo("/today");
@@ -33,7 +36,6 @@ export default function SkipSheet() {
             key={option}
             label={option}
             state={reason === option ? "selected" : "default"}
-            // Tapping the chosen reason again clears it (the reason is optional)
             onPress={() => setReason(reason === option ? "" : option)}
           />
         ))}

@@ -16,7 +16,7 @@ export const formatWhen = (iso: string) => {
   return `${day} ${formatTime(date)}`;
 };
 
-// "Just now", "5m ago", "2h ago" or "3d ago" for posts and comments.
+// Show relative timestamps for posts and comments.
 export const timeAgo = (iso: string) => {
   const minutes = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
   if (minutes < 1) return "Just now";

@@ -15,6 +15,7 @@ import { formatTime, formatWhen } from "../../../utils/time";
 export default function TodayScreen() {
   const [data, setData] = useState<AppData>();
 
+  // Refresh challenge and progress
   useFocusEffect(
     useCallback(() => {
       DataService.getData().then(setData);
@@ -27,25 +28,25 @@ export default function TodayScreen() {
     router.navigate({ pathname: "/today/detail", params: { id } });
 
   const special = getChallenge(dailySpecial.challengeId);
-  // "completed", "skipped" or undefined (not done yet)
   const specialStatus = data.tasks.find((t) => t.challengeId === special.id)?.status;
   const specialDone = specialStatus === "completed";
   const specialSkipped = specialStatus === "skipped";
   const [hours, mins] = dailySpecial.closesAt.split(":").map(Number);
   const closesAt = formatTime(new Date(new Date().setHours(hours, mins)));
 
+  // Challenge type separation
   const everyday = data.tasks.filter(
     (t) => t.challengeId !== special.id && t.status !== "scheduled",
   );
   const scheduled = data.tasks.filter((t) => t.status === "scheduled");
 
-  // The circle someone last shared with, or undefined if they haven't posted.
+  // Find circle for last shared post
   const storyCircle = (name: string) =>
     name === "You"
       ? data.checkIns.find((c) => c.audience !== "private")?.audience
       : data.posts.find((p) => p.author === name)?.circleId;
-  // Everyone across all your circles, each name once: You first, then
-  // people who have posted, then everyone else.
+  
+  // Show circle member
   const order = (name: string) => (name === "You" ? 0 : storyCircle(name) ? 1 : 2);
   const people = [...new Set(data.circles.flatMap((c) => c.members))].sort(
     (a, b) => order(a) - order(b),
@@ -73,7 +74,8 @@ export default function TodayScreen() {
               const isYou = name === "You";
               const circle = storyCircle(name);
               const hasPosted = circle !== undefined;
-              // Your turn opens the camera; anyone who has posted opens their story
+
+              // Open camera for new checkin or view existing story
               const open = () =>
                 isYou && !hasPosted
                   ? router.push("/checkin")
@@ -117,9 +119,9 @@ export default function TodayScreen() {
           }`}
           accessibilityHint="Opens the challenge details"
         >
+            {/* styling for skipped Daily Special. */}
           <ImageBackground
             source={special.image}
-            // Greyed out once skipped; it can still be opened and done
             style={[styles.special, specialSkipped && styles.skipped]}
           >
             <View style={[StyleSheet.absoluteFill, styles.overlay]} />

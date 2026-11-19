@@ -9,8 +9,8 @@ import { colours, space, type } from "../constants/theme";
 
 type PlaceholderScreenProps = {
   title: string;
-  figma: string; // e.g. "Figma 03 Today"
-  children?: ReactNode; // navigation buttons
+  figma: string;
+  children?: ReactNode;
 };
 
 export function PlaceholderScreen({

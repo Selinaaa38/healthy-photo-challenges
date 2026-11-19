@@ -10,25 +10,24 @@ import {
 } from "react-native";
 import { colours, radius, space, type } from "../constants/theme";
 
-// A check-in post in a circle feed
-// - Reactions the user has made are filled black with a tick, and a line
-//   under them says "You and 2 others". (beta change 5)
-
 type IconName = ComponentProps<typeof Ionicons>["name"];
 
+// Reusable post card for the Circles feed.
+// Displays the author's photo, caption, audience and reactions.
+// Supports reacting to posts and opening additional options.
 export type Reaction = {
   id: string;
-  label: string; // "Cheer"
-  icon: IconName; // "sparkles"
-  count: number; // total, including the user
+  label: string;
+  icon: IconName;
+  count: number;
   reactedByMe: boolean;
 };
 
 type PostCardProps = {
   author: string;
-  audience: string; // "Family only"
-  timeAgo: string; // "2h ago"
-  goal: string; // "Nourish"
+  audience: string;
+  timeAgo: string;
+  goal: string; 
   photo?: ImageSourcePropType;
   selfie?: ImageSourcePropType;
   caption?: string;

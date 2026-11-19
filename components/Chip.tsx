@@ -25,12 +25,9 @@ export function Chip({ label, state, onPress, accessibilityHint }: ChipProps) {
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      // VoiceOver reads the state and the name, e.g. "Running, excluded"
       accessibilityLabel={isExcluded ? `${label}, excluded` : label}
       accessibilityState={{ selected: isSelected || isExcluded }}
       accessibilityHint={accessibilityHint}
-      // The chip is drawn 38 pt tall. The touch area is
-      // extended to the 44 pt accessibility minimum.
       hitSlop={{ top: 3, bottom: 3 }}
       style={({ pressed }) => [
         styles.chip,

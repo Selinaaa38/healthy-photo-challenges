@@ -9,7 +9,7 @@ export default function ProfileLayout() {
         options={{
           headerShown: true,
           title: "Edit preferences",
-          headerBackButtonDisplayMode: "minimal", // just the arrow
+          headerBackButtonDisplayMode: "minimal",
           headerTintColor: colours.text,
           headerShadowVisible: false,
         }}

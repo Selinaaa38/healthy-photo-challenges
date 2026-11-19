@@ -7,9 +7,10 @@ export default function OnboardingLayout() {
       <Stack.Screen
         name="preferences"
         options={{
+          // Show back arrow and title during preference setup
           headerShown: true,
           title: "Your preferences",
-          headerBackButtonDisplayMode: "minimal", // just the arrow
+          headerBackButtonDisplayMode: "minimal",
           headerTintColor: colours.text,
           headerShadowVisible: false,
         }}

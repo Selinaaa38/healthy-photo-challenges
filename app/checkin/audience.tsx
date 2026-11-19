@@ -8,7 +8,8 @@ import DataService, { describeMembers, getChallenge } from "../../services/DataS
 import { Audience, Circle } from "../../types";
 
 // Choose who sees the check-in. Private is the default, and the
-// button names the choice (US05). Completing adds one plant (US07).
+// button names the choice (US05). 
+// Completing adds one plant (US07).
 export default function AudienceScreen() {
   const { id, photo, selfie, caption } = useLocalSearchParams<{
     id: string;
@@ -17,18 +18,23 @@ export default function AudienceScreen() {
     caption: string;
   }>();
   const [circles, setCircles] = useState<Circle[]>([]);
+
+  // Keep check-in private unless specified
   const [audience, setAudience] = useState<Audience>("private");
 
+  // Load user's circles for sharing
   useEffect(() => {
     DataService.getData().then((data) => setCircles(data.circles));
   }, []);
 
+  // Combine private option with available circles
   const options = [
     { id: "private", name: "Private", detail: "Only you can see this", icon: "lock-closed-outline" as const },
     ...circles.map((c) => ({ id: c.id, name: c.name, detail: describeMembers(c), icon: "people-outline" as const })),
   ];
   const chosen = options.find((o) => o.id === audience)!;
 
+  // Save checkin, award plant and show completion
   const share = async () => {
     await DataService.completeChallenge(id, photo, selfie, caption, audience);
     router.replace("/checkin/complete");
