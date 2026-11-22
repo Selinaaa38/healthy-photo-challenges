@@ -6,9 +6,10 @@ Healthy Photo Challenges suggests short, personalised wellbeing challenges. User
 
 ## Requirements
 
+- Git
 - Node.js 20 or later
 - npm
-- The Expo Go app on an iPhone or Android phone
+- The latest Expo Go app on an iPhone or Android phone (the project uses Expo SDK 58)
 
 ## Run the app
 
@@ -16,12 +17,14 @@ The app runs through an Expo tunnel, so it works on any network without the phon
 Sign up for a free Expo account at https://expo.dev/signup.
 
 ```bash
+git clone https://github.com/Selinaaa38/healthy-photo-challenges.git
+cd healthy-photo-challenges
 npm install
 npx expo login
 npm run tunnel
 ```
 
-If Expo asks to install `@expo/ngrok`, press **Y**. When the QR code appears, scan it with your phone's camera (iPhone) or the Expo Go app (Android).
+If Expo asks to install `@expo/ngrok`, press **Y**. When the QR code appears, scan it with your phone's camera (iPhone) or the Expo Go app (Android). Allow camera and photo access when asked, so you can take check-in photos.
 
 To reset all data to the starting state of demo from the Welcome screen, open **Profile → Reset demo data**.
 
