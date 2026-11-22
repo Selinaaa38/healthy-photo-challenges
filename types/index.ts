@@ -88,6 +88,7 @@ export type AppData = {
   preferences: Preferences | null; // null until set, or after "Explore first"
   specialAlerts: boolean; // Daily Special notifications toggle
   theme: Theme;
+  selfieOn?: boolean; // last selfie choice on the camera (B3); on if never set
   plants: number; // one per completed challenge
   tasks: Task[]; // today's everyday challenges and the Daily Special
   checkIns: CheckIn[];

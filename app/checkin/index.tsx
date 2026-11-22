@@ -27,15 +27,22 @@ export default function CameraScreen() {
   // Placement of camera control away from notch
   const insets = useSafeAreaInsets();
 
-  // First active challenge when opened from camera tab
+  // Load the last selfie choice (B3), and pick the first active challenge
+  // when opened from the camera tab
   useEffect(() => {
-    if (!params.id) {
-      DataService.getData().then((data) => {
+    DataService.getData().then((data) => {
+      setSelfieOn(data.selfieOn ?? true);
+      if (!params.id) {
         const next = data.tasks.find((t) => t.status === "active");
         setId(next?.challengeId ?? dailySpecial.challengeId);
-      });
-    }
+      }
+    });
   }, [params.id]);
+
+  const toggleSelfie = () => {
+    setSelfieOn(!selfieOn);
+    DataService.setSelfieOn(!selfieOn);
+  };
 
   if (!id || !permission) return null;
   const challenge = getChallenge(id);
@@ -104,7 +111,7 @@ export default function CameraScreen() {
 
           {!photo && (
             <Pressable
-              onPress={() => setSelfieOn(!selfieOn)}
+              onPress={toggleSelfie}
               accessibilityRole="switch"
               accessibilityLabel="Selfie"
               accessibilityState={{ checked: selfieOn }}

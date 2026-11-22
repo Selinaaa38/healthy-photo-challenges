@@ -106,6 +106,7 @@ export default function CreateCircleScreen() {
       <Button
         label={invited.length ? `Create circle and invite ${invited.length}` : "Create circle"}
         onPress={create}
+        disabled={name.trim() === ""} // B1: disabled until a name is entered
       />
     </ScrollView>
   );

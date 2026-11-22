@@ -96,6 +96,13 @@ export default {
     await AsyncStorage.removeItem(STORAGE_KEY);
   },
 
+  // Remember the selfie choice for next time (B3).
+  setSelfieOn(on: boolean) {
+    return this.update((data) => {
+      data.selfieOn = on;
+    });
+  },
+
   // Save preferences and generate personalised challenges
   savePreferences(prefs: Preferences) {
     return this.update((data) => {

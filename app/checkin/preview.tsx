@@ -13,7 +13,7 @@ export default function PreviewScreen() {
 
   // Confirm before deleting photo
   const confirmDelete = () => {
-    Alert.alert("Delete this photo?", "You'll go back to the camera to take a new one.", [
+    Alert.alert("Delete this photo?", "Your challenge stays open so you can take another.", [
       { text: "Cancel", style: "cancel" },
       { text: "Delete photo", style: "destructive", onPress: () => router.back() },
     ]);
