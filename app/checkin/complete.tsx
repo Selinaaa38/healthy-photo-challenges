@@ -25,6 +25,13 @@ export default function CompleteScreen() {
   const grown = data.plants % plantsPerWorld || plantsPerWorld;
   const toGo = plantsPerWorld - grown;
 
+  // Clear finished check-in (camera, preview, complete) and open a fresh
+  // camera; "next" makes its close button go back home.
+  const doAnother = () => {
+    router.dismissAll();
+    router.replace({ pathname: "/checkin", params: { next: "1" } });
+  };
+
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.content}>
@@ -66,7 +73,7 @@ export default function CompleteScreen() {
 
       <View style={styles.actions}>
         <Button label="Back to home" onPress={() => router.dismissTo("/today")} />
-        <Button label="Do another challenge" variant="text" onPress={() => router.replace("/checkin")} />
+        <Button label="Do another challenge" variant="text" onPress={doAnother} />
       </View>
     </SafeAreaView>
   );

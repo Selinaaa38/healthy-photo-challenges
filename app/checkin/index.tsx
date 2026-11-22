@@ -16,7 +16,8 @@ import DataService, { getChallenge } from "../../services/DataService";
 // B3: selfie is labelled and can be turned off. With it on, the camera
 // flips to the front for a second photo after the main one.
 export default function CameraScreen() {
-  const params = useLocalSearchParams<{ id?: string }>();
+  // Opened from "Do another challenge", so closing goes home
+  const params = useLocalSearchParams<{ id?: string; next?: string }>();
   const [id, setId] = useState(params.id);
   const [permission, requestPermission] = useCameraPermissions();
   const camera = useRef<CameraView>(null);
@@ -87,7 +88,7 @@ export default function CameraScreen() {
       <StatusBar style="light" />
       <View style={styles.top}>
         <Pressable
-          onPress={() => router.back()}
+          onPress={() => (params.next ? router.dismissTo("/today") : router.back())}
           accessibilityRole="button"
           accessibilityLabel="Close camera"
           hitSlop={12}
